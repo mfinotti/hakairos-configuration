@@ -1,0 +1,24 @@
+#####
+##### HA-KAFKA Configuration
+#####
+ssl_context:
+  ssl_certpath: "./certs"
+  ssl_cafile: "ca-cert"
+  ssl_certfile: "cert-signed"
+  ssl_keyfile: "private-key"
+  ssl_password: "LinkedSolutions"
+# sasl_context:
+#   sasl_mechanism: "PLAIN"
+#   sasl_plain_username: "zzzz"
+#   sasl_plain_password: "zzzzz-secret"
+producers:
+  - host: quattrostagioni.linkedsolutions.it
+    port: 9093
+    topic: "HASSIO"
+    security: "ssl"
+consumers:
+  - host: quattrostagioni.linkedsolutions.it
+    port: 9093
+    topic: TEST_XXXX
+    group: "hassio"
+    security: "ssl"

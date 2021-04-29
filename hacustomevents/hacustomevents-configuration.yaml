@@ -1,0 +1,62 @@
+#####
+##### HA-CUSTOM-EVENTS Configuration
+#####
+events:
+  - event: HA_STARTUP_COMPLETE
+    platform: HASSIO_EVENT
+    type: listener
+    callback:
+      - event: HAKAFKA_CONSUMER_START
+      - event: HAKAFKA_PRODUCER_START
+  - event: HA_SHUTDOWN_REQUEST
+    platform: HASSIO_EVENT
+    type: listener
+    callback:
+      - event: HAKAFKA_CONSUMER_STOP
+      - event: HAKAFKA_PRODUCER_STOP
+  - event: HAKAFKA_CONSUMER_START
+    platform: HAKAFKA
+    type: dispatcher
+  - event: HAKAFKA_PRODUCER_START
+    platform: HAKAFKA
+    type: dispatcher
+  - event: HAKAFKA_CONSUMER_STOP
+    platform: HAKAFKA
+    type: dispatcher
+  - event: HAKAFKA_PRODUCER_STOP
+    platform: HAKAFKA
+    type: dispatcher
+  - event: INBOUND_EVENT
+    platform: HASSIO_EVENT
+    type: listener
+    callback:
+      - event: HAKAFKA_PRODUCER_PRODUCE
+        topic: "HASSIO"
+  - event: HAKAFKA_PRODUCER_PRODUCE
+    platform: HAKAFKA
+    type: dispatcher
+  - event: HA_SYSTEM_ENTITIES_ALIGN
+    platform: HASSIO_STATE
+    type: listener
+    callback:
+      - event: HAKAFKA_PRODUCER_PRODUCE
+        topic: "HASSIO"
+targets:
+  - target: input_boolean.pump_anomaly
+    events:
+      - event: HASSIO_ALERT
+        message: Messaggio ALERT impianto irrigazione
+        callback:
+          - event: HAKAFKA_PRODUCER_PRODUCE
+            topic: "HASSIO"
+            data:
+              - platform: HASSIO_EVENT
+                label: "Spegni irrigazione"
+                event: spegniIrrigazione
+      - event: TESTTTTTTTTTTTTT
+        callback:
+          - event: HAKAFKA_PRODUCER_PRODUCE
+            data:
+              - platform: HASSIO_EVENT
+                label: "Spegni irrigazione"
+                event: spegniIrrigazione
