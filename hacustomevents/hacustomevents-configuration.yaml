@@ -41,6 +41,18 @@ events:
     callback:
       - event: HAKAFKA_PRODUCER_PRODUCE
         topic: "HASSIO"
+  - event: HA_SYSTEM_COMMAND_ALING
+    platform: HASSIO_EVENT
+    type: listener
+    callback:
+      - event: HAKAFKA_PRODUCER_PRODUCE
+        topic: "HASSIO"
+        data:
+          - event: SOME-EVENT
+  - event: SOME-EVENT
+    platform: HASSIO_EVENT
+    type: dispatcher
+    label: "An event to be dispatched"
 targets:
   - target: input_boolean.pump_anomaly
     events:
