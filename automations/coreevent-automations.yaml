@@ -10,7 +10,7 @@
 - alias: Hassio kafka align
   trigger:
     - platform: time_pattern
-      minutes: "/5"
+      hours: "/4"
   condition:
     - condition: state
       entity_id: "input_boolean.kafka_integration"
@@ -24,7 +24,7 @@
 - alias: Hassio kafka align command
   trigger:
     - platform: time_pattern
-      minutes: "/5"
+      hours: "/4"
   condition:
     - condition: state
       entity_id: input_boolean.kafka_integration

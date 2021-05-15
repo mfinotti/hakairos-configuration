@@ -46,25 +46,117 @@ events:
     type: listener
     callback:
       - event: HAKAFKA_PRODUCER_PRODUCE
-        topic: "HASSIO"
+        topic: "HASSIO_COMMAND_ALIGN"
         data:
-          - event: SOME-EVENT
-  - event: SOME-EVENT
+          - event: line1OnCommand
+          - event: line1OffCommand
+          - event: line2OnCommand
+          - event: line2OffCommand
+  - event: line1OnCommand
     platform: HASSIO_EVENT
     type: dispatcher
-    label: "An event to be dispatched"
+    label: "Accendi irrigazione Linea 1"
+  - event: line1OffCommand
+    platform: HASSIO_EVENT
+    type: dispatcher
+    label: "Spegni irrigazione Linea 1"
+  - event: line2OnCommand
+    platform: HASSIO_EVENT
+    type: dispatcher
+    label: "Accendi irrigazione Linea 2"
+  - event: line2OffCommand
+    platform: HASSIO_EVENT
+    type: dispatcher
+    label: "Spegni irrigazione Linea 2"
 targets:
-  - target: input_boolean.pump_anomaly
-    events:
-      - event: HASSIO_ALERT
-        message: Messaggio ALERT impianto irrigazione
+  - target: scripts.ececution
+    events: 
+      - event: ENTITY_METRICS_COLLECTION
         callback:
           - event: HAKAFKA_PRODUCER_PRODUCE
-            topic: "HASSIO"
-            data:
-              - platform: HASSIO_EVENT
-                label: "Spegni irrigazione"
-                event: spegniIrrigazione
+            topic: "HASSIO_ENTITY_METRICS"
+      - event: SYSTEM_METRICS_COLLECTION
+        callback:
+          - event: HAKAFKA_PRODUCER_PRODUCE
+            topic: "HASSIO_SYSTEM_METRICS"
+  - target: sensor.temperature_sensor
+    events:
+      - event: NOTICE_TEMPERATURA_BASSA_1
+        level: NOTICE
+        message: Attenzione, temperatura bassa (5 gradi)
+        callback:
+          - event: HAKAFKA_PRODUCER_PRODUCE
+            topic: "HASSIO_TEST"
+      - event: ALERT_TEMPERATURA_BASSA_2
+        level: ALERT
+        message: Attenzione, temperatura estremamente bassa!!! (sottozero)
+        callback:
+          - event: HAKAFKA_PRODUCER_PRODUCE
+            topic: "HASSIO_TEST"
+      - event: ALERT_TEMPERATURA_ALTA_2
+        level: ALERT
+        message: Attenzione, temperatura estremamente alta!!! (sopra 30 gradi)
+        callback:
+          - event: HAKAFKA_PRODUCER_PRODUCE
+            topic: "HASSIO_TEST"
+  - target: binary_sensor.pump_load
+    events:    
+      - event: ALERT_PUMP_LOAD
+        level: ALERT
+        message: Attenzione, scattato termico della pompa!!
+        callback:
+          - event: HAKAFKA_PRODUCER_PRODUCE
+            topic: "HASSIO_TEST"
+      - event: NOTICE_PUMP_LOAD_OFF
+        level: NOTICE
+        message: Termico pompa OK
+        callback:
+          - event: HAKAFKA_PRODUCER_PRODUCE
+            topic: "HASSIO_TEST"
+  - target: binary_sensor.blackout
+    events:    
+      - event: ALERT_BLACKOUT
+        level: ALERT
+        message: Attenzione, blackout in corso!!
+        callback:
+          - event: HAKAFKA_PRODUCER_PRODUCE
+            topic: "HASSIO_TEST"
+      - event: NOTICE_BLACKOUT_OFF
+        level: NOTICE
+        message: Tornata corrente elettrica
+        callback:
+          - event: HAKAFKA_PRODUCER_PRODUCE
+            topic: "HASSIO_TEST"
+  - target: binary_sensor.sensor_solenoid_valve_1
+    events:
+      - event: NOTICE_LINE_1_ON
+        level: NOTICE
+        message: Linea irrigazione 1 accesa
+        callback:
+          - event: HAKAFKA_PRODUCER_PRODUCE
+            topic: "HASSIO_TEST"
+      - event: NOTICE_LINE_1_OFF
+        level: NOTICE
+        message: Linea irrigazione 1 spenta
+        callback:
+          - event: HAKAFKA_PRODUCER_PRODUCE
+            topic: "HASSIO_TEST"
+  - target: binary_sensor.sensor_solenoid_valve_2
+    events:    
+      - event: NOTICE_LINE_2_ON
+        level: NOTICE
+        message: Linea irrigazione 2 accesa
+        callback:
+          - event: HAKAFKA_PRODUCER_PRODUCE
+            topic: "HASSIO_TEST"
+      - event: NOTICE_LINE_2_OFF
+        level: NOTICE
+        message: Linea irrigazione 2 spenta
+        callback:
+          - event: HAKAFKA_PRODUCER_PRODUCE
+            topic: "HASSIO_TEST"
+
+
       - event: TESTTTTTTTTTTTTT
         callback:
           - event: HAKAFKA_PRODUCER_PRODUCE
