@@ -40,13 +40,13 @@ events:
     type: listener
     callback:
       - event: HAKAFKA_PRODUCER_PRODUCE
-        topic: "HASSIO"
+        topic: "HASSIO_ENTITY_ALIGN"
   - event: HA_SYSTEM_COMMAND_ALING
     platform: HASSIO_EVENT
     type: listener
     callback:
       - event: HAKAFKA_PRODUCER_PRODUCE
-        topic: "HASSIO_COMMAND_ALIGN"
+        topic: "HASSIO_ENTITY_ALIGN"
         data:
           - event: line1OnCommand
           - event: line1OffCommand
@@ -86,19 +86,19 @@ targets:
         message: Attenzione, temperatura bassa (5 gradi)
         callback:
           - event: HAKAFKA_PRODUCER_PRODUCE
-            topic: "HASSIO_TEST"
+            topic: "HASSIO"
       - event: ALERT_TEMPERATURA_BASSA_2
         level: ALERT
         message: Attenzione, temperatura estremamente bassa!!! (sottozero)
         callback:
           - event: HAKAFKA_PRODUCER_PRODUCE
-            topic: "HASSIO_TEST"
+            topic: "HASSIO"
       - event: ALERT_TEMPERATURA_ALTA_2
         level: ALERT
         message: Attenzione, temperatura estremamente alta!!! (sopra 30 gradi)
         callback:
           - event: HAKAFKA_PRODUCER_PRODUCE
-            topic: "HASSIO_TEST"
+            topic: "HASSIO"
   - target: binary_sensor.pump_load
     events:    
       - event: ALERT_PUMP_LOAD
@@ -106,13 +106,13 @@ targets:
         message: Attenzione, scattato termico della pompa!!
         callback:
           - event: HAKAFKA_PRODUCER_PRODUCE
-            topic: "HASSIO_TEST"
+            topic: "HASSIO"
       - event: NOTICE_PUMP_LOAD_OFF
         level: NOTICE
         message: Termico pompa OK
         callback:
           - event: HAKAFKA_PRODUCER_PRODUCE
-            topic: "HASSIO_TEST"
+            topic: "HASSIO"
   - target: binary_sensor.blackout
     events:    
       - event: ALERT_BLACKOUT
@@ -120,13 +120,13 @@ targets:
         message: Attenzione, blackout in corso!!
         callback:
           - event: HAKAFKA_PRODUCER_PRODUCE
-            topic: "HASSIO_TEST"
+            topic: "HASSIO"
       - event: NOTICE_BLACKOUT_OFF
         level: NOTICE
         message: Tornata corrente elettrica
         callback:
           - event: HAKAFKA_PRODUCER_PRODUCE
-            topic: "HASSIO_TEST"
+            topic: "HASSIO"
   - target: binary_sensor.sensor_solenoid_valve_1
     events:
       - event: NOTICE_LINE_1_ON
@@ -134,13 +134,13 @@ targets:
         message: Linea irrigazione 1 accesa
         callback:
           - event: HAKAFKA_PRODUCER_PRODUCE
-            topic: "HASSIO_TEST"
+            topic: "HASSIO"
       - event: NOTICE_LINE_1_OFF
         level: NOTICE
         message: Linea irrigazione 1 spenta
         callback:
           - event: HAKAFKA_PRODUCER_PRODUCE
-            topic: "HASSIO_TEST"
+            topic: "HASSIO"
   - target: binary_sensor.sensor_solenoid_valve_2
     events:    
       - event: NOTICE_LINE_2_ON
@@ -148,13 +148,13 @@ targets:
         message: Linea irrigazione 2 accesa
         callback:
           - event: HAKAFKA_PRODUCER_PRODUCE
-            topic: "HASSIO_TEST"
+            topic: "HASSIO"
       - event: NOTICE_LINE_2_OFF
         level: NOTICE
         message: Linea irrigazione 2 spenta
         callback:
           - event: HAKAFKA_PRODUCER_PRODUCE
-            topic: "HASSIO_TEST"
+            topic: "HASSIO"
 
 
       - event: TESTTTTTTTTTTTTT

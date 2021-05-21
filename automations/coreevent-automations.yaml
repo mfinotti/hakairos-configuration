@@ -7,7 +7,7 @@
   action:
     - event: HAKAFKA_CONSUMER_START
     - event: HAKAFKA_PRODUCER_START
-- alias: Hassio kafka align
+- alias: Hassio kafka align entities
   trigger:
     - platform: time_pattern
       hours: "/4"
