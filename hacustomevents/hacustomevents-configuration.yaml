@@ -31,7 +31,7 @@ events:
     type: listener
     callback:
       - event: HAKAFKA_PRODUCER_PRODUCE
-        topic: "HASSIO"
+        topic: "TEST_HASSIO"
   - event: HAKAFKA_PRODUCER_PRODUCE
     platform: HAKAFKA
     type: dispatcher
@@ -40,13 +40,13 @@ events:
     type: listener
     callback:
       - event: HAKAFKA_PRODUCER_PRODUCE
-        topic: "HASSIO_ENTITY_ALIGN"
+        topic: "TEST_HASSIO_ENTITY_ALIGN"
   - event: HA_SYSTEM_COMMAND_ALING
     platform: HASSIO_EVENT
     type: listener
     callback:
       - event: HAKAFKA_PRODUCER_PRODUCE
-        topic: "HASSIO_ENTITY_ALIGN"
+        topic: "TEST_HASSIO_ENTITY_ALIGN"
         data:
           - event: automationEventOnCommand
           - event: automationEventOffCommand
@@ -60,12 +60,12 @@ events:
     label: "An event to be dispatched"
 targets:
   - target: scripts.ececution
-    events: 
+    events:
       - event: ENTITY_METRICS_COLLECTION
         callback:
           - event: HAKAFKA_PRODUCER_PRODUCE
-            topic: "HASSIO_ENTITY_METRICS"
+            topic: "TEST_HASSIO_ENTITY_METRICS"
       - event: SYSTEM_METRICS_COLLECTION
         callback:
           - event: HAKAFKA_PRODUCER_PRODUCE
-            topic: "HASSIO_SYSTEM_METRICS"
+            topic: "TEST_HASSIO_SYSTEM_METRICS"
