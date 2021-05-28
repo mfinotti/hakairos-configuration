@@ -1,0 +1,209 @@
+title: Castel Ginnetti
+views:
+  - path: default_view
+    title: Home
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: weather-forecast
+            entity: weather.vigna
+          - type: gauge
+            entity: sensor.temperature_sensor
+            min: -10
+            max: 50
+            severity:
+              green: 20
+              yellow: 30
+              red: 35
+            name: 'Temperatura '
+          - type: gauge
+            entity: sensor.humidity_sensor
+            min: 0
+            max: 100
+            severity:
+              green: 50
+              yellow: 60
+              red: 75
+            name: Umidità
+      - type: vertical-stack
+        cards:
+          - type: history-graph
+            entities:
+              - entity: binary_sensor.pump
+            hours_to_show: 6
+            refresh_interval: 0
+            title: Accensione pompa
+          - type: horizontal-stack
+            cards:
+              - type: gauge
+                entity: sensor.load_phase_1
+                min: 0
+                max: 2000
+                severity:
+                  green: 1700
+                  yellow: 1800
+                  red: 1850
+                name: Assorbimento Fase1
+              - type: gauge
+                entity: sensor.load_phase_2
+                min: 0
+                max: 2000
+                severity:
+                  green: 1700
+                  yellow: 1800
+                  red: 1850
+                name: Assorbimento Fase2
+              - type: gauge
+                entity: sensor.load_phase_3
+                min: 0
+                max: 2000
+                severity:
+                  green: 1700
+                  yellow: 1800
+                  red: 1850
+                name: Assorbimento Fase3
+      - type: vertical-stack
+        cards:
+          - type: entities
+            entities: []
+            title: Stato impianto
+          - type: button
+            tap_action:
+              action: more-info
+            entity: binary_sensor.sensor_anomaly
+            hold_action:
+              action: none
+            show_state: true
+            show_name: true
+            icon_height: 50px
+          - type: entities
+            entities:
+              - entity: binary_sensor.sensor_pump_state
+                secondary_info: last-changed
+              - entity: binary_sensor.sensor_solenoid_valve_1
+                secondary_info: last-updated
+              - entity: binary_sensor.sensor_solenoid_valve_2
+                secondary_info: last-updated
+              - entity: binary_sensor.sensor_water_on_land
+              - entity: binary_sensor.sensor_blackout
+              - entity: binary_sensor.sensor_pump_load
+            state_color: true
+  - title: Consumi
+    path: consumi
+    panel: true
+    badges: []
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: markdown
+            content: Riepilogo giornaliero dei consumi
+            title: Consumi
+          - type: history-graph
+            entities:
+              - entity: sensor.energy_total_value
+            hours_to_show: 24
+            refresh_interval: 0
+            title: Consumo totale
+          - type: history-graph
+            entities:
+              - entity: sensor.load_phase_1
+            hours_to_show: 24
+            refresh_interval: 0
+            title: Consumo fase 1
+          - type: history-graph
+            entities:
+              - entity: sensor.load_phase_2
+            hours_to_show: 24
+            refresh_interval: 0
+            title: Consumo fase 2
+          - type: history-graph
+            entities:
+              - entity: sensor.load_phase_3
+            hours_to_show: 24
+            refresh_interval: 0
+            title: Consumo fase 3
+  - title: Irrigazione
+    path: irrigazione
+    panel: true
+    badges: []
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: markdown
+            content: Riepilogo giornaliero dell'irrigazione
+            title: Irrigazione
+          - type: history-graph
+            entities:
+              - entity: binary_sensor.pump
+            hours_to_show: 24
+            refresh_interval: 0
+            title: Accensione pompa
+          - type: history-graph
+            entities:
+              - entity: binary_sensor.sensor_solenoid_valve_1
+            hours_to_show: 24
+            refresh_interval: 0
+            title: Irrigazione linea 1
+          - type: history-graph
+            entities:
+              - entity: binary_sensor.sensor_solenoid_valve_2
+            hours_to_show: 24
+            refresh_interval: 0
+            title: Irrigazione linea 2
+          - type: history-graph
+            entities:
+              - entity: binary_sensor.sensor_water_on_land
+            hours_to_show: 24
+            refresh_interval: 0
+            title: Acqua a valle
+  - title: SENSORI
+    path: anomalie
+    panel: true
+    badges: []
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: markdown
+            content: Riepilogo giornaliero di tutti i sensori dell'impiano
+            title: Sensori dell'impianto
+          - type: history-graph
+            entities:
+              - entity: binary_sensor.sensor_anomaly
+            hours_to_show: 24
+            refresh_interval: 0
+            title: Anomalia generale
+          - type: history-graph
+            entities:
+              - entity: sensor.temperature_sensor
+            hours_to_show: 24
+            refresh_interval: 0
+            title: Temperatura ambiente
+          - type: history-graph
+            entities:
+              - entity: sensor.humidity_sensor
+            hours_to_show: 24
+            refresh_interval: 0
+            title: Umidità ambiente
+          - type: history-graph
+            entities:
+              - entity: binary_sensor.sensor_pump_load
+            hours_to_show: 24
+            refresh_interval: 0
+            title: Termico pompa
+          - type: history-graph
+            entities:
+              - entity: binary_sensor.blackout
+            hours_to_show: 24
+            refresh_interval: 0
+            title: UPS
+  - title: Admin
+    path: admin
+    badges: []
+    cards:
+      - type: entities
+        entities:
+          - entity: group.kafka_entity_align
+          - entity: input_boolean.kafka_integration
+          - entity: input_text.system_code
+          - entity: input_text.system_name
+        title: Sensori
