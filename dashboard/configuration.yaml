@@ -1,1 +1,42 @@
-
+title: Kairos green DEMO
+views:
+  - path: default_view
+    title: Home
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: weather-forecast
+            entity: weather.vigna
+          - type: entities
+            entities:
+              - entity: input_boolean.pump_anomaly
+      - type: history-graph
+        entities:
+          - entity: input_boolean.pump
+        hours_to_show: 24
+        refresh_interval: 0
+        title: Accensione Pompa
+      - type: entities
+        entities:
+          - entity: input_boolean.pump_line_1
+          - entity: input_boolean.pump_line_2
+        title: Irrigazione
+        show_header_toggle: false
+      - type: vertical-stack
+        cards:
+          - type: button
+            tap_action:
+              action: toggle
+            entity: binary_sensor.anomaly
+            icon_height: 50px
+            show_state: true
+          - type: entities
+            entities:
+              - entity: binary_sensor.pump_state
+                secondary_info: last-changed
+              - entity: binary_sensor.line_1_state
+                secondary_info: last-updated
+              - entity: binary_sensor.line_2_state
+                secondary_info: last-updated
+            state_color: true
+            title: Stato impianto

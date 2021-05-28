@@ -48,16 +48,31 @@ events:
       - event: HAKAFKA_PRODUCER_PRODUCE
         topic: "HASSIO_ENTITY_ALIGN"
         data:
-          - event: automationEventOnCommand
-          - event: automationEventOffCommand
-  - event: automationEventOnCommand
+          - event: automationEventOnLine1
+          - event: automationEventOffLine1
+          - event: automationEventOnLine2
+          - event: automationEventOffLine2
+          - event: automationEventOffPump
+  - event: automationEventOnLine1
     platform: HASSIO_EVENT
     type: dispatcher
-    label: "An event to be dispatched"
-  - event: automationEventOffCommand
+    label: "Accendi irrigazione Linea 1"
+  - event: automationEventOnLine2
     platform: HASSIO_EVENT
     type: dispatcher
-    label: "An event to be dispatched"
+    label: "Accendi irrigazione Linea 2"
+  - event: automationEventOffLine1
+    platform: HASSIO_EVENT
+    type: dispatcher
+    label: "Spegni irrigazione Linea 1"
+  - event: automationEventOffLine2
+    platform: HASSIO_EVENT
+    type: dispatcher
+    label: "Spegni irrigazione Linea 2"
+  - event: automationEventOffPump
+    platform: HASSIO_EVENT
+    type: dispatcher
+    label: "Spegni irrigazione"
 targets:
   - target: scripts.ececution
     events: 
@@ -69,3 +84,36 @@ targets:
         callback:
           - event: HAKAFKA_PRODUCER_PRODUCE
             topic: "HASSIO_SYSTEM_METRICS"
+  - target: input_boolean.pump_line_1
+    events:
+      - event: LINE_1_ON
+        level: NOTICE
+        callback:
+          - event: HAKAFKA_PRODUCER_PRODUCE
+            topic: "HASSIO"
+      - event: LINE_1_OFF
+        level: NOTICE
+        callback:
+          - event: HAKAFKA_PRODUCER_PRODUCE
+            topic: "HASSIO"
+  - target: input_boolean.pump_line_2
+    events:
+      - event: LINE_2_ON
+        level: NOTICE
+        callback:
+          - event: HAKAFKA_PRODUCER_PRODUCE
+            topic: "HASSIO"
+      - event: LINE_2_OFF
+        level: NOTICE
+        callback:
+          - event: HAKAFKA_PRODUCER_PRODUCE
+            topic: "HASSIO"
+  - target: input_boolean.pump_anomaly
+    events:
+      - event: ALERT_PUMP_ANOMALY
+        level: ALERT
+        callback:
+          - event: HAKAFKA_PRODUCER_PRODUCE
+            topic: "HASSIO"
+            data:
+              - event:  automationEventOffPump
