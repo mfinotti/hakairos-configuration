@@ -54,21 +54,82 @@ events:
     type: dispatcher
     label: "An event to be dispatched"
 targets:
-  - target: input_boolean.pump_anomaly
+  # - target: input_boolean.pump_anomaly
+  #   events:
+  #     - event: HASSIO_ALERT
+  #       message: Messaggio ALERT impianto irrigazione
+  #       callback:
+  #         - event: HAKAFKA_PRODUCER_PRODUCE
+  #           topic: "HASSIO"
+  #           data:
+  #             - platform: HASSIO_EVENT
+  #               label: "Spegni irrigazione"
+  #               event: spegniIrrigazione
+      # - event: TESTTTTTTTTTTTTT
+      #   callback:
+      #     - event: HAKAFKA_PRODUCER_PRODUCE
+      #       data:
+      #         - platform: HASSIO_EVENT
+      #           label: "Spegni irrigazione"
+      #           event: spegniIrrigazione
+  - target: binary_sensor.anomaly
+    events: 
+      - event: ALERT_PUMP_ANOMALY
+        level: ALERT
+        message: Attenzione, anomalia pompa!!!
+        callback:
+          - event: HAKAFKA_PRODUCER_PRODUCE
+            topic: "HASSIO" 
+            data:
+              - platform: HASSIO_EVENT
+                label: "Spegni irrigazione"
+                target: spegniIrrigazioneEvent
+  - target: sensor.temperature_sensor
     events:
-      - event: HASSIO_ALERT
-        message: Messaggio ALERT impianto irrigazione
+      - event: NOTICE_TEMPERATURA_BASSA_1
+        level: NOTICE
+        message: Attenzione, temperatura bassa (5 gradi)
         callback:
           - event: HAKAFKA_PRODUCER_PRODUCE
             topic: "HASSIO"
-            data:
-              - platform: HASSIO_EVENT
-                label: "Spegni irrigazione"
-                event: spegniIrrigazione
-      - event: TESTTTTTTTTTTTTT
+      - event: ALERT_TEMPERATURA_BASSA_2
+        level: ALERT
+        message: Attenzione, temperatura estremamente bassa!!! (sottozero)
         callback:
           - event: HAKAFKA_PRODUCER_PRODUCE
-            data:
-              - platform: HASSIO_EVENT
-                label: "Spegni irrigazione"
-                event: spegniIrrigazione
+            topic: "HASSIO"
+      - event: ALERT_TEMPERATURA_ALTA_2
+        level: ALERT
+        message: Attenzione, temperatura estremamente alta!!! (sopra 30 gradi)
+        callback:
+          - event: HAKAFKA_PRODUCER_PRODUCE
+            topic: "HASSIO"
+  - target: binary_sensor.line_1_state
+    events:
+      - event: NOTICE_LINE_1_ON
+        level: NOTICE
+        message: Irrigazione linea 1 ON
+        callback:
+          - event: HAKAFKA_PRODUCER_PRODUCE
+            topic: "HASSIO"
+      - event: NOTICE_LINE_1_OFF
+        level: NOTICE
+        message: Irrigazione linea 1 OFF
+        callback:
+          - event: HAKAFKA_PRODUCER_PRODUCE
+            topic: "HASSIO"
+  - target: switch.linea_2
+    events:
+      - event: NOTICE_LINE_2_ON
+        level: NOTICE
+        message: Irrigazione linea 2 ON
+        callback:
+          - event: HAKAFKA_PRODUCER_PRODUCE
+            topic: "HASSIO"
+      - event: NOTICE_LINE_2_OFF
+        level: NOTICE
+        message: Irrigazione linea 2 OFF
+        callback:
+          - event: HAKAFKA_PRODUCER_PRODUCE
+            topic: "HASSIO"
+      
