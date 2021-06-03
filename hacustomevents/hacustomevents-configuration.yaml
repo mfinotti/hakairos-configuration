@@ -79,7 +79,7 @@ targets:
         callback:
           - event: HAKAFKA_PRODUCER_PRODUCE
             topic: "HASSIO_SYSTEM_METRICS"
-  - target: sensor.temperature_sensor
+  - target: sensor.temperature_sensor_value
     events:
       - event: NOTICE_TEMPERATURA_BASSA_1
         level: NOTICE
