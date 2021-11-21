@@ -1,0 +1,42 @@
+hello_world:
+  module: hello
+  class: HelloWorld
+greenhouse_windows_position_manager:
+  module: greenhouseWindowsPositionManager
+  class: GreenhouseWindowsPositionManager
+asyncMQTTHelper:
+  module: asyncMQTTHelper
+  class: AsyncMQTTHelper
+weatherStationHelper:
+  module: weatherStationHelper
+  class: WeatherStationHelper
+  priodity: 10
+  urlObserver: "http://192.168.1.254/livedata.htm"
+  sensors:
+    temperature:
+      wsentity: outTemp
+      topic: ws/temperature
+    humidity:
+      wsentity: outHumi
+      topic: ws/humidity
+    battery:
+      wsentity: outBattSta1
+      topic: ws/battery
+    uv:
+      wsentity: uvi
+      topic: ws/uv
+    windDirection:
+      wsentity: windir
+      topic: ws/wind/direction
+    windSpeed:
+      wsentity: avgwind
+      topic: ws/wind/speed
+    windGust: #folata
+      wsentity: gustspeed
+      topic: ws/wind/gust
+    rain:
+      wsentity: rainofdaily
+      topic: ws/rain
+    solarRadiation:
+      wsentity: solarrad
+      topic: ws/solar-radiation

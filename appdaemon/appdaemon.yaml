@@ -1,0 +1,16 @@
+appdaemon:
+  time_zone: CET
+  latitude: 51.725
+  longitude: 14.3434
+  elevation: 0
+  #app_dir: /appdaemon
+  logs:
+    main_log:
+      filename: ./logs/appdaemon.log
+  plugins:
+    HASS:
+      type: hass
+      ha_url: http://127.0.0.1:8123
+      token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJlZDA2Mzc1YTJkNWI0YjY0YTM4M2U1NTljOWZjNjE2NSIsImlhdCI6MTYzNjUwMDk5OCwiZXhwIjoxOTUxODYwOTk4fQ.r4E9vt7319AiKWgDstZTsgWTvCwJyURiYzOwfWSbZwM
+  python_packages:
+    - lxml

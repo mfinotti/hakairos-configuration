@@ -40,70 +40,114 @@ events:
     type: listener
     callback:
       - event: HAKAFKA_PRODUCER_PRODUCE
-        topic: "HASSIO"
+        topic: "HASSIO_ENTITY_ALIGN"
   - event: HA_SYSTEM_COMMAND_ALING
     platform: HASSIO_EVENT
     type: listener
     callback:
       - event: HAKAFKA_PRODUCER_PRODUCE
-        topic: "HASSIO"
+        topic: "HASSIO_ENTITY_ALIGN"
         data:
-          - event: SOME-EVENT
-  - event: SOME-EVENT
-    platform: HASSIO_EVENT
-    type: dispatcher
-    label: "An event to be dispatched"
+          - event: line_1_on
+          - event: line_1_off
+          - event: line_2_on
+          - event: line_2_off
 targets:
-  # - target: input_boolean.pump_anomaly
-  #   events:
-  #     - event: HASSIO_ALERT
-  #       message: Messaggio ALERT impianto irrigazione
-  #       callback:
-  #         - event: HAKAFKA_PRODUCER_PRODUCE
-  #           topic: "HASSIO"
-  #           data:
-  #             - platform: HASSIO_EVENT
-  #               label: "Spegni irrigazione"
-  #               event: spegniIrrigazione
-      # - event: TESTTTTTTTTTTTTT
-      #   callback:
-      #     - event: HAKAFKA_PRODUCER_PRODUCE
-      #       data:
-      #         - platform: HASSIO_EVENT
-      #           label: "Spegni irrigazione"
-      #           event: spegniIrrigazione
-  - target: binary_sensor.anomaly
+  - target: binary_sensor.s7_state
     events: 
-      - event: ALERT_PUMP_ANOMALY
+      - event: blackout
         level: ALERT
-        message: Attenzione, anomalia pompa!!!
+        message: Attenzione, Serra 7 - blackout in corso!!! Automazioni sulle finestre disabilitate.
         callback:
           - event: HAKAFKA_PRODUCER_PRODUCE
             topic: "HASSIO" 
-            data:
-              - platform: HASSIO_EVENT
-                label: "Spegni irrigazione"
-                target: spegniIrrigazioneEvent
-  - target: sensor.temperature_sensor
-    events:
-      - event: NOTICE_TEMPERATURA_BASSA_1
-        level: NOTICE
-        message: Attenzione, temperatura bassa (5 gradi)
-        callback:
-          - event: HAKAFKA_PRODUCER_PRODUCE
-            topic: "HASSIO"
-      - event: ALERT_TEMPERATURA_BASSA_2
+      - event: windows_side_anomaly
         level: ALERT
-        message: Attenzione, temperatura estremamente bassa!!! (sottozero)
+        message: Attenzione, Serra 7 - Anomalia finestre laterali!!! Automazioni sulle finestre disabilitate.
         callback:
           - event: HAKAFKA_PRODUCER_PRODUCE
             topic: "HASSIO"
-      - event: ALERT_TEMPERATURA_ALTA_2
+      - event: windows_top_anomaly
+        level: ALERT
+        message: Attenzione, Serra 7 - Anomalia Colmi!!! Automazioni sulle finestre disabilitate.
+        callback:
+          - event: HAKAFKA_PRODUCER_PRODUCE
+            topic: "HASSIO"
+      - event: off
+        level: NOTICE
+        message: Anomalia Serra 7 rientrata. Automazioni finestre ripristinate.
+        callback:
+          - event: HAKAFKA_PRODUCER_PRODUCE
+            topic: "HASSIO"
+  - target: binary_sensor.s8_state
+    events: 
+      - event: blackout
+        level: ALERT
+        message: Attenzione, Serra 8 - blackout in corso!!! Automazioni sulle finestre disabilitate.
+        callback:
+          - event: HAKAFKA_PRODUCER_PRODUCE
+            topic: "HASSIO" 
+      - event: windows_side_anomaly
+        level: ALERT
+        message: Attenzione, Serra 8 - Anomalia finestre laterali!!! Automazioni sulle finestre disabilitate.
+        callback:
+          - event: HAKAFKA_PRODUCER_PRODUCE
+            topic: "HASSIO"
+      - event: windows_top_anomaly
+        level: ALERT
+        message: Attenzione, Serra 8 - Anomalia Colmi!!! Automazioni sulle finestre disabilitate.
+        callback:
+          - event: HAKAFKA_PRODUCER_PRODUCE
+            topic: "HASSIO"    
+      - event: off
+        level: NOTICE
+        message: Anomalia Serra 8 rientrata. Automazioni finestre ripristinate.
+        callback:
+          - event: HAKAFKA_PRODUCER_PRODUCE
+            topic: "HASSIO"
+  - target: sensor.w_temperature_state
+    events:
+      - event: cold
+        level: NOTICE
+        message: Attenzione, temperatura bassa (10 gradi)
+        callback:
+          - event: HAKAFKA_PRODUCER_PRODUCE
+            topic: "HASSIO"
+      - event: extremely_cold
+        level: ALERT
+        message: Attenzione, temperatura estremamente bassa!!! (5 gradi)
+        callback:
+          - event: HAKAFKA_PRODUCER_PRODUCE
+            topic: "HASSIO"
+      - event: extremely_hot
         level: ALERT
         message: Attenzione, temperatura estremamente alta!!! (sopra 30 gradi)
         callback:
           - event: HAKAFKA_PRODUCER_PRODUCE
             topic: "HASSIO"
+            data:
+              - event: line_1_on
+              - event: line_2_on
+  - target: sensor.s7_temperature_state
+    events:
+      - event: TEMP_EXTREMELY_LOW
+        level: ALERT
+        message: Serra 7 - Temperatura estremamente bassa! Finestre in chiusura totale.
+      - event: TEMP_EXTREMELY_HIGH
+        level: ALERT
+        message: Serra 7 - Temperatura estremamente alta! Finestre in apertura totale.
+  - target: sensor.s8_temperature_state
+    events:
+      - event: TEMP_EXTREMELY_LOW
+        level: ALERT
+        message: Serra 8 - Temperatura estremamente bassa! Finestre in chiusura totale.
+      - event: TEMP_EXTREMELY_HIGH
+        level: ALERT
+        message: Serra 8 - Temperatura estremamente alta! Finestre in apertura totale.
+
+
+
+
   - target: binary_sensor.line_1_state
     events:
       - event: NOTICE_LINE_1_ON
@@ -118,7 +162,7 @@ targets:
         callback:
           - event: HAKAFKA_PRODUCER_PRODUCE
             topic: "HASSIO"
-  - target: switch.linea_2
+  - target: binary_sensor.line_2_state
     events:
       - event: NOTICE_LINE_2_ON
         level: NOTICE
@@ -133,3 +177,13 @@ targets:
           - event: HAKAFKA_PRODUCER_PRODUCE
             topic: "HASSIO"
       
+  - target: scripts.ececution
+    events: 
+      - event: ENTITY_METRICS_COLLECTION
+        callback:
+          - event: HAKAFKA_PRODUCER_PRODUCE
+            topic: "HASSIO_ENTITY_METRICS"
+      - event: SYSTEM_METRICS_COLLECTION
+        callback:
+          - event: HAKAFKA_PRODUCER_PRODUCE
+            topic: "HASSIO_SYSTEM_METRICS"

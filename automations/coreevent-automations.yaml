@@ -7,10 +7,10 @@
   action:
     - event: HAKAFKA_CONSUMER_START
     - event: HAKAFKA_PRODUCER_START
-- alias: Hassio kafka align
+- alias: Hassio kafka align entities
   trigger:
     - platform: time_pattern
-      minutes: "/5"
+      hours: "/12"
   condition:
     - condition: state
       entity_id: "input_boolean.kafka_integration"
@@ -24,7 +24,7 @@
 - alias: Hassio kafka align command
   trigger:
     - platform: time_pattern
-      minutes: "/5"
+      hours: "/12"
   condition:
     - condition: state
       entity_id: input_boolean.kafka_integration
