@@ -1,1 +1,621 @@
 
+views:
+  - path: default_view
+    title: Home
+    badges: []
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: weather-forecast
+            entity: weather.kairosgreen_demo
+          - type: horizontal-stack
+            cards:
+              - type: gauge
+                entity: sensor.ws_temperature
+                min: -10
+                max: 50
+                severity:
+                  green: 20
+                  yellow: 30
+                  red: 35
+                name: 'Temperatura '
+              - type: gauge
+                entity: sensor.ws_humidity
+                min: 0
+                max: 100
+                severity:
+                  green: 50
+                  yellow: 60
+                  red: 75
+                name: Umidità
+          - type: horizontal-stack
+            cards:
+              - type: conditional
+                conditions:
+                  - entity: sensor.weather_index
+                    state: NOTTE
+                card:
+                  type: button
+                  tap_action:
+                    action: more-info
+                  entity: sensor.weather_index
+                  hold_action:
+                    action: none
+                  show_state: true
+                  show_name: false
+                  icon: 'hass:weather-night'
+              - type: conditional
+                conditions:
+                  - entity: sensor.weather_index
+                    state: PIOGGIA DEBOLE
+                card:
+                  type: button
+                  tap_action:
+                    action: more-info
+                  entity: sensor.weather_index
+                  hold_action:
+                    action: none
+                  show_state: true
+                  show_name: false
+                  icon: 'hass:weather-rainy'
+              - type: conditional
+                conditions:
+                  - entity: sensor.weather_index
+                    state: TEMPORALE
+                card:
+                  type: button
+                  tap_action:
+                    action: more-info
+                  entity: sensor.weather_index
+                  hold_action:
+                    action: none
+                  show_state: true
+                  show_name: false
+                  icon: 'hass:lightning'
+              - type: conditional
+                conditions:
+                  - entity: sensor.weather_index
+                    state: NUVOLOSO
+                card:
+                  type: button
+                  tap_action:
+                    action: more-info
+                  entity: sensor.weather_index
+                  hold_action:
+                    action: none
+                  show_state: true
+                  show_name: false
+                  icon: 'hass:weather-partly-cloudy'
+              - type: conditional
+                conditions:
+                  - entity: sensor.weather_index
+                    state: SOLEGGIATO
+                card:
+                  type: button
+                  tap_action:
+                    action: more-info
+                  entity: sensor.weather_index
+                  hold_action:
+                    action: none
+                  show_state: true
+                  show_name: false
+                  icon: 'hass:sunny'
+              - type: gauge
+                entity: sensor.ws_uv_sensor
+                min: 0
+                max: 10
+                severity:
+                  green: 0
+                  yellow: 5
+                  red: 9
+                name: Indice UV
+      - type: vertical-stack
+        cards:
+          - type: entities
+            entities: []
+            title: Vento e Finestre
+          - type: entities
+            entities:
+              - entity: sensor.w_wind_intensity_frontend
+                icon: 'hass:windsock'
+                name: Velocità vento
+              - entity: sensor.w_wind_direction_frontend
+                name: Direzione vento
+                icon: 'hass:apple-safari'
+              - entity: sensor.w_wind_gust_frontend
+                name: Velocità raffica
+                icon: 'hass:weather-windy'
+            header:
+              type: buttons
+              entities: []
+          - type: horizontal-stack
+            cards:
+              - type: entities
+                entities:
+                  - entity: sensor.s7_window_top1
+                    name: Colmi
+                  - entity: sensor.s7_window_right_side1
+                    name: Laterali
+                  - entity: sensor.s7_window_front_sea_side_lx1
+                    name: Lato mare
+                  - entity: sensor.s7_window_front_mountain_side_lx1
+                    name: Lato monte
+                title: Finestre serra 7
+                state_color: false
+              - type: entities
+                entities:
+                  - entity: sensor.s8_window_top1
+                    name: Colmi
+                  - entity: sensor.s8_window_right_side1
+                    name: Laterali
+                  - entity: sensor.s8_window_front_mountain_side1
+                    name: Lato mare
+                  - entity: sensor.s8_window_front_mountain_side1
+                    name: Lato monte
+                title: Finestre serra 8
+                state_color: false
+          - type: horizontal-stack
+            cards:
+              - type: button
+                entity: automation.chiudi_tutte_le_finestre
+                icon: 'hass:window-closed'
+                show_state: false
+                tap_action:
+                  action: call-service
+                  service: script.close_all_windows_call
+              - type: button
+                entity: automation.riposiziona_tutte_le_finestre
+                icon: 'hass:window-closed'
+                show_state: false
+                tap_action:
+                  action: call-service
+                  service: script.reset_all_windows
+                  service_data:
+                    entity_id: automation.riposiziona_tutte_le_finestre
+      - type: vertical-stack
+        cards:
+          - type: entities
+            entities: []
+            title: Stato impianti
+          - type: horizontal-stack
+            cards:
+              - type: button
+                tap_action:
+                  action: more-info
+                entity: binary_sensor.s7_state
+                show_icon: true
+                show_state: true
+                hold_action:
+                  action: none
+                icon_height: 50px
+              - type: button
+                tap_action:
+                  action: more-info
+                entity: binary_sensor.s8_state
+                show_icon: true
+                show_state: true
+                hold_action:
+                  action: none
+                icon_height: 50px
+          - type: entities
+            entities:
+              - entity: sensor.ws_battery
+                secondary_info: last-updated
+            state_color: true
+  - title: Dati giornalieri
+    path: today
+    panel: true
+    badges: []
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: horizontal-stack
+            cards:
+              - type: vertical-stack
+                cards:
+                  - type: sensor
+                    entity: sensor.ws_temperature
+                    detail: 2
+                    name: Temperatura
+                    graph: line
+                  - type: history-graph
+                    entities:
+                      - entity: sensor.ws_temperature
+                      - entity: sensor.s7_temperature
+                      - entity: sensor.s8_temperature
+                    hours_to_show: 24
+                    refresh_interval: 0
+                    title: Temperature
+                  - type: history-graph
+                    entities:
+                      - entity: sensor.weather_index
+                    hours_to_show: 24
+                    refresh_interval: 0
+                    title: Meteo
+                  - type: history-graph
+                    entities:
+                      - entity: sensor.w_wind_intensity_frontend
+                    hours_to_show: 24
+                    refresh_interval: 0
+                    title: Presenza vento
+              - type: vertical-stack
+                cards:
+                  - type: sensor
+                    entity: sensor.ws_humidity
+                    graph: line
+                    icon: 'hass:water'
+                    name: Umidità
+                    detail: 2
+                  - type: history-graph
+                    entities:
+                      - entity: sensor.ws_humidity
+                      - entity: sensor.s7_humidity
+                      - entity: sensor.s8_humidity
+                    hours_to_show: 24
+                    refresh_interval: 0
+                    title: Umidità
+                  - type: history-graph
+                    entities:
+                      - entity: sensor.ws_uv_sensor
+                    hours_to_show: 24
+                    refresh_interval: 0
+                    title: Intensità sole
+                  - type: history-graph
+                    entities:
+                      - entity: sensor.w_wind_direction_frontend
+                    hours_to_show: 24
+                    refresh_interval: 0
+                    title: Provenienza vento
+  - title: Anomalie
+    path: anomalie
+    panel: true
+    badges: []
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: history-graph
+            entities:
+              - entity: binary_sensor.s7_state
+              - entity: binary_sensor.s8_state
+            hours_to_show: 24
+            refresh_interval: 0
+            title: Stato serre
+          - type: history-graph
+            entities:
+              - entity: binary_sensor.s7_blackout
+              - entity: binary_sensor.s8_blackout
+            hours_to_show: 24
+            refresh_interval: 0
+            title: Allarme blackout
+          - type: history-graph
+            entities:
+              - entity: binary_sensor.s7_window_side_anomaly
+              - entity: binary_sensor.s7_window_top_anomaly
+              - entity: binary_sensor.s8_window_side_anomaly
+              - entity: binary_sensor.s8_window_top_anomaly
+            hours_to_show: 24
+            refresh_interval: 0
+            title: Allarme Finestre
+  - title: Serra 7
+    path: serra-7
+    panel: false
+    theme: kairosgreen - Light
+    badges: []
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: markdown
+            content: |
+              Anomalie, Valori ed impostazioni della serra numero 7.
+            title: Serra 7
+          - type: vertical-stack
+            cards:
+              - type: button
+                tap_action:
+                  action: more-info
+                entity: binary_sensor.s7_state
+                show_state: true
+                icon_height: 50px
+              - type: entities
+                entities:
+                  - entity: binary_sensor.s7_blackout
+                    name: Anomalia Blackout
+                    secondary_info: last-updated
+                  - entity: binary_sensor.s7_window_side_anomaly
+                    name: Anomalia finestre laterali
+                    secondary_info: last-updated
+                  - entity: binary_sensor.s7_window_top_anomaly
+                    name: Anomalia colmi
+                    secondary_info: last-updated
+                title: Anomalie
+      - type: vertical-stack
+        cards:
+          - type: vertical-stack
+            cards:
+              - type: markdown
+                content: >-
+                  Valori relativi a temperatura, umidità relativa dell'ambiente,
+                  valori del terreno e posizione delle finestre.
+                title: Valori
+              - type: horizontal-stack
+                cards:
+                  - type: gauge
+                    entity: sensor.s7_temperature
+                    min: 0
+                    max: 50
+                    severity:
+                      green: 22
+                      yellow: 24
+                      red: 27
+                  - type: gauge
+                    entity: sensor.s7_humidity
+                    min: 0
+                    max: 100
+                    severity:
+                      green: 72
+                      yellow: 73
+                      red: 85
+                  - type: gauge
+                    entity: sensor.s7_soilmoisture_sensor
+                    min: 0
+                    max: 100
+              - type: entities
+                entities:
+                  - entity: sensor.s7_window_front_mountain_side_lx1
+                  - entity: sensor.s7_window_front_mountain_side_rx1
+                  - entity: sensor.s7_window_front_sea_side_lx1
+                  - entity: sensor.s7_window_front_sea_side_rx1
+                  - entity: sensor.s7_window_left_side1
+                  - entity: sensor.s7_window_right_side1
+                  - entity: sensor.s7_window_top1
+                  - entity: sensor.s7_window_top2
+                  - entity: sensor.s7_window_top4
+                  - entity: sensor.s7_window_top3
+                title: Posizione finestre
+      - type: vertical-stack
+        cards:
+          - type: markdown
+            content: >-
+              Impostazioni relative a tempi di apertura delle finestre,
+              automazioni etc.
+            title: Impostazioni
+          - type: entities
+            entities:
+              - entity: input_number.s7_open_close_time_window_low
+                name: Finestre laterali
+              - entity: input_number.s7_open_close_time_window_top
+                name: Colmi
+            title: Tempi apertura finestre
+          - type: entities
+            entities:
+              - entity: input_boolean.s7_window_low_automation
+              - entity: input_boolean.s7_window_top_automation
+            title: Automazioni
+  - title: Serra 8
+    path: serra-8
+    panel: false
+    theme: kairosgreen - Light
+    badges: []
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: markdown
+            content: |
+              Anomalie, Valori ed impostazioni della serra numero 8.
+            title: Serra 8
+          - type: vertical-stack
+            cards:
+              - type: button
+                tap_action:
+                  action: more-info
+                entity: binary_sensor.s8_state
+                show_state: true
+                icon_height: 50px
+              - type: entities
+                entities:
+                  - entity: binary_sensor.s8_blackout
+                    name: Anomalia Blackout
+                    secondary_info: last-updated
+                  - entity: binary_sensor.s8_window_side_anomaly
+                    name: Anomalia finestre laterali
+                    secondary_info: last-updated
+                  - entity: binary_sensor.s8_window_top_anomaly
+                    name: Anomalia colmi
+                    secondary_info: last-updated
+                title: Anomalie
+      - type: vertical-stack
+        cards:
+          - type: vertical-stack
+            cards:
+              - type: markdown
+                content: >-
+                  Valori relativi a temperatura, umidità relativa dell'ambiente,
+                  valori del terreno e posizione delle finestre.
+                title: Valori
+              - type: horizontal-stack
+                cards:
+                  - type: gauge
+                    entity: sensor.s8_temperature
+                    min: 0
+                    max: 50
+                    severity:
+                      green: 22
+                      yellow: 24
+                      red: 27
+                  - type: gauge
+                    entity: sensor.s8_humidity
+                    min: 0
+                    max: 100
+                    severity:
+                      green: 72
+                      yellow: 73
+                      red: 85
+                  - type: gauge
+                    entity: sensor.s8_soilmoisture_sensor
+                    min: 0
+                    max: 100
+              - type: entities
+                entities:
+                  - entity: sensor.s8_window_front_mountain_side1
+                  - entity: sensor.s8_window_front_sea_side1
+                  - entity: sensor.s8_window_left_side1
+                  - entity: sensor.s8_window_right_side1
+                  - entity: sensor.s8_window_top1
+                  - entity: sensor.s8_window_top2
+                title: Posizione finestre
+      - type: vertical-stack
+        cards:
+          - type: markdown
+            content: >-
+              Impostazioni relative a tempi di apertura delle finestre,
+              automazioni etc.
+            title: Impostazioni
+          - type: entities
+            entities:
+              - entity: input_number.s8_open_close_time_window_low
+                name: Finestre laterali
+              - entity: input_number.s8_open_close_time_window_top
+                name: Colmi
+            title: Tempi apertura finestre
+          - type: entities
+            entities:
+              - entity: input_boolean.s8_window_low_automation
+              - entity: input_boolean.s8_window_top_automation
+            title: Automazioni
+  - title: Automazione finestre
+    path: automazione-finestre
+    panel: false
+    theme: kairosgreen - Light
+    badges: []
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: markdown
+            content: >-
+              In questa sezione è possibile personalizzare il comportamento dei
+              colmi e finestre laterali sulla base di parametri come
+              temperatura, umidità, pioggia e vento.
+
+
+              Sono disponibili **5** soglie di temperatura dove è possibile
+              specificare la posizione delle finestre.
+
+
+              *N.B Valore 100% corrisponde a  Finestra totalmente aperta*
+            title: Impostazioni temperatura
+          - type: vertical-stack
+            cards:
+              - type: entities
+                entities:
+                  - entity: input_number.s_temperature_day_level1
+                  - entity: input_number.s_window_low_position_temperature_day_level1
+                  - entity: input_number.s_window_top_position_temperature_day_level1
+                title: Soglia temperatura 1
+                state_color: false
+              - type: entities
+                entities:
+                  - entity: input_number.s_temperature_day_level2
+                  - entity: input_number.s_window_low_position_temperature_day_level2
+                  - entity: input_number.s_window_top_position_temperature_day_level2
+                title: Soglia temperatura 2
+                state_color: false
+              - type: entities
+                entities:
+                  - entity: input_number.s_temperature_day_level3
+                  - entity: input_number.s_window_low_position_temperature_day_level3
+                  - entity: input_number.s_window_top_position_temperature_day_level3
+                title: Soglia temperatura 3
+                state_color: false
+              - type: entities
+                entities:
+                  - entity: input_number.s_temperature_day_level4
+                  - entity: input_number.s_window_low_position_temperature_day_level4
+                  - entity: input_number.s_window_top_position_temperature_day_level4
+                title: Soglia temperatura 4
+                state_color: false
+              - type: entities
+                entities:
+                  - entity: input_number.s_temperature_day_level5
+                  - entity: input_number.s_window_low_position_temperature_day_level5
+                  - entity: input_number.s_window_top_position_temperature_day_level5
+                title: Soglia temperatura 5
+                state_color: false
+      - type: vertical-stack
+        cards:
+          - type: markdown
+            content: >-
+              Sono disponibili  **2** soglie di **umidità** in corrispondenza
+              delle quali si può specificare in percentuale quanto dovranno
+              aprirsi le finestre. 
+
+
+              *Al di sotto della soglia 1 vengono applicate le posizioni
+              specificate nella sezione *Temperatura*.*
+
+
+              N.B Valore 100% corrisponde a Finestra totalmente aperta
+            title: Impostazioni Umidità
+          - type: vertical-stack
+            cards:
+              - type: entities
+                entities:
+                  - entity: input_number.s_humidity_level1
+                  - entity: >-
+                      input_number.s_window_low_increase_position_humidity_level1
+                  - entity: >-
+                      input_number.s_window_top_increase_position_humidity_level1
+                title: Soglia umidità 1
+                state_color: false
+              - type: entities
+                entities:
+                  - entity: input_number.s_humidity_level2
+                  - entity: >-
+                      input_number.s_window_low_increase_position_humidity_level2
+                  - entity: >-
+                      input_number.s_window_top_increase_position_humidity_level2
+                title: Soglia umidità 2
+                state_color: false
+      - type: vertical-stack
+        cards:
+          - type: markdown
+            content: >-
+              Sono disponibili **2** soglie per l'intensità del **vento**  in
+              corrispondenza delle quali si può specificare in percentuale
+              quanto dovranno *chiudersi* le finestre. 
+
+
+              **Vento da mare e montagna vengono gestiti automaticamente**.  
+
+
+              *Al di sotto della soglia 1 vengono applicate le posizioni
+              specificate nella sezione *Temperatura*.*
+
+
+              N.B Valore 100% corrisponde a Finestra totalmente aperta.
+            title: Impostazioni vento
+          - type: vertical-stack
+            cards:
+              - type: entities
+                entities:
+                  - entity: input_number.w_wind_level1
+                  - entity: input_number.s_window_low_decrease_position_wind_level1
+                  - entity: input_number.s_window_top_decrease_position_wind_level1
+                title: Soglia vento 1
+              - type: entities
+                entities:
+                  - entity: input_number.w_wind_level2
+                  - entity: input_number.s_window_low_decrease_position_wind_level2
+                  - entity: input_number.s_window_top_decrease_position_wind_level2
+                title: Soglia vento 2
+  - title: admin
+    path: admin
+    visible:
+      - user: 6965389937ba485e844ef843514a5998
+    badges: []
+    cards:
+      - type: entities
+        entities:
+          - entity: group.kafka_entity_align
+          - entity: input_boolean.kafka_integration
+          - entity: input_text.system_code
+title: Agricola futura
