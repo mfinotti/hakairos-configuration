@@ -1,0 +1,73 @@
+title: Agricola Futura
+views:
+  - path: default_view
+    title: Ambiente
+    type: panel
+    badges: []
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: markdown
+            content: >-
+              Da questa pagina è possibile impostare i parametri e le soglie
+              ambientali per vento, direzione vento, intensità del sole e
+              pioggia.
+            title: Valori ambientali
+          - type: horizontal-stack
+            cards:
+              - type: button
+                tap_action:
+                  action: none
+                entity: ''
+                icon: mdi:wind-turbine
+                name: Intensità vento
+                show_icon: true
+                hold_action:
+                  action: none
+                icon_height: 40px
+              - type: entity
+                entity: input_number.w_wind_level1
+                name: Moderato
+                unit: m/s
+              - type: entity
+                entity: input_number.w_wind_level2
+                name: Intenso
+                unit: m/s
+          - type: horizontal-stack
+            cards:
+              - type: button
+                tap_action:
+                  action: none
+                entity: ''
+                icon: mdi:white-balance-sunny
+                name: Intensità sole
+                show_icon: true
+                hold_action:
+                  action: none
+                icon_height: 40px
+              - type: entity
+                entity: input_number.w_wind_level1
+                name: Moderato
+                unit: m/s
+              - type: entity
+                entity: input_number.w_wind_level2
+                name: Intenso
+                unit: m/s
+          - type: horizontal-stack
+            cards:
+              - type: button
+                tap_action:
+                  action: none
+                entity: ''
+                icon: mdi:weather-lightning-rainy
+                name: Intensità pioggia
+                show_icon: true
+                hold_action:
+                  action: none
+                icon_height: 40px
+              - type: entity
+                entity: input_number.w_wind_level1
+                name: Leggera
+              - type: entity
+                entity: input_number.w_wind_level2
+                name: Intensa

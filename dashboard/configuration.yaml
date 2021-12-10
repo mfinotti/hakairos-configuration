@@ -1,4 +1,3 @@
-
 views:
   - path: default_view
     title: Home
@@ -7,7 +6,7 @@ views:
       - type: vertical-stack
         cards:
           - type: weather-forecast
-            entity: weather.kairosgreen_demo
+            entity: weather.agricola_futura
           - type: horizontal-stack
             cards:
               - type: gauge
@@ -43,7 +42,7 @@ views:
                     action: none
                   show_state: true
                   show_name: false
-                  icon: 'hass:weather-night'
+                  icon: hass:weather-night
               - type: conditional
                 conditions:
                   - entity: sensor.weather_index
@@ -57,7 +56,7 @@ views:
                     action: none
                   show_state: true
                   show_name: false
-                  icon: 'hass:weather-rainy'
+                  icon: hass:weather-rainy
               - type: conditional
                 conditions:
                   - entity: sensor.weather_index
@@ -71,7 +70,7 @@ views:
                     action: none
                   show_state: true
                   show_name: false
-                  icon: 'hass:lightning'
+                  icon: hass:lightning
               - type: conditional
                 conditions:
                   - entity: sensor.weather_index
@@ -85,7 +84,7 @@ views:
                     action: none
                   show_state: true
                   show_name: false
-                  icon: 'hass:weather-partly-cloudy'
+                  icon: hass:weather-partly-cloudy
               - type: conditional
                 conditions:
                   - entity: sensor.weather_index
@@ -99,7 +98,7 @@ views:
                     action: none
                   show_state: true
                   show_name: false
-                  icon: 'hass:sunny'
+                  icon: hass:sunny
               - type: gauge
                 entity: sensor.ws_uv_sensor
                 min: 0
@@ -117,14 +116,14 @@ views:
           - type: entities
             entities:
               - entity: sensor.w_wind_intensity_frontend
-                icon: 'hass:windsock'
+                icon: hass:windsock
                 name: Velocità vento
               - entity: sensor.w_wind_direction_frontend
                 name: Direzione vento
-                icon: 'hass:apple-safari'
+                icon: hass:apple-safari
               - entity: sensor.w_wind_gust_frontend
                 name: Velocità raffica
-                icon: 'hass:weather-windy'
+                icon: hass:weather-windy
             header:
               type: buttons
               entities: []
@@ -158,14 +157,14 @@ views:
             cards:
               - type: button
                 entity: automation.chiudi_tutte_le_finestre
-                icon: 'hass:window-closed'
+                icon: hass:window-closed
                 show_state: false
                 tap_action:
                   action: call-service
                   service: script.close_all_windows_call
               - type: button
                 entity: automation.riposiziona_tutte_le_finestre
-                icon: 'hass:window-closed'
+                icon: hass:window-closed
                 show_state: false
                 tap_action:
                   action: call-service
@@ -201,6 +200,7 @@ views:
             entities:
               - entity: sensor.ws_battery
                 secondary_info: last-updated
+                name: Batteria stazione meteo
             state_color: true
   - title: Dati giornalieri
     path: today
@@ -243,7 +243,7 @@ views:
                   - type: sensor
                     entity: sensor.ws_humidity
                     graph: line
-                    icon: 'hass:water'
+                    icon: hass:water
                     name: Umidità
                     detail: 2
                   - type: history-graph
@@ -361,36 +361,33 @@ views:
                     max: 100
               - type: entities
                 entities:
-                  - entity: sensor.s7_window_front_mountain_side_lx1
-                  - entity: sensor.s7_window_front_mountain_side_rx1
-                  - entity: sensor.s7_window_front_sea_side_lx1
-                  - entity: sensor.s7_window_front_sea_side_rx1
-                  - entity: sensor.s7_window_left_side1
-                  - entity: sensor.s7_window_right_side1
-                  - entity: sensor.s7_window_top1
-                  - entity: sensor.s7_window_top2
-                  - entity: sensor.s7_window_top4
-                  - entity: sensor.s7_window_top3
-                title: Posizione finestre
+                  - entity: sensor.w_wind_intensity_frontend
+                    icon: hass:windsock
+                    name: Velocità vento
+                  - entity: sensor.w_wind_direction_frontend
+                    name: Direzione vento
+                    icon: hass:apple-safari
+                  - entity: sensor.w_wind_gust_frontend
+                    name: Velocità raffica
+                    icon: hass:weather-windy
+                header:
+                  type: buttons
+                  entities: []
       - type: vertical-stack
         cards:
-          - type: markdown
-            content: >-
-              Impostazioni relative a tempi di apertura delle finestre,
-              automazioni etc.
-            title: Impostazioni
           - type: entities
             entities:
-              - entity: input_number.s7_open_close_time_window_low
-                name: Finestre laterali
-              - entity: input_number.s7_open_close_time_window_top
-                name: Colmi
-            title: Tempi apertura finestre
-          - type: entities
-            entities:
-              - entity: input_boolean.s7_window_low_automation
-              - entity: input_boolean.s7_window_top_automation
-            title: Automazioni
+              - entity: sensor.s7_window_front_mountain_side_lx1
+              - entity: sensor.s7_window_front_mountain_side_rx1
+              - entity: sensor.s7_window_front_sea_side_lx1
+              - entity: sensor.s7_window_front_sea_side_rx1
+              - entity: sensor.s7_window_left_side1
+              - entity: sensor.s7_window_right_side1
+              - entity: sensor.s7_window_top1
+              - entity: sensor.s7_window_top2
+              - entity: sensor.s7_window_top4
+              - entity: sensor.s7_window_top3
+            title: Posizione finestre
   - title: Serra 8
     path: serra-8
     panel: false

@@ -1,0 +1,331 @@
+title: Strategia finestre Serra 7
+views:
+  - path: temperatura
+    title: Temperatura
+    type: panel
+    icon: ''
+    badges: []
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: markdown
+            content: >-
+              Da questa pagina è possibile gestire le finestre in relazione ai
+              parametri di temperatura. 
+            title: Strategia finestre Serra 7 - Temperatura
+          - type: horizontal-stack
+            cards:
+              - type: button
+                tap_action:
+                  action: toggle
+                entity: input_boolean.s7_period_1
+                icon_height: 50px
+              - type: button
+                tap_action:
+                  action: toggle
+                entity: input_boolean.s7_period_2
+                icon_height: 50px
+              - type: button
+                tap_action:
+                  action: toggle
+                entity: input_boolean.s7_period_3
+                icon_height: 50px
+              - type: button
+                tap_action:
+                  action: toggle
+                entity: input_boolean.s7_period_4
+                icon_height: 50px
+          - type: horizontal-stack
+            cards:
+              - type: entities
+                entities:
+                  - entity: input_datetime.s7_period_1
+                title: Inizio
+                state_color: false
+              - type: entities
+                entities:
+                  - entity: input_datetime.s7_period_2
+                title: Inizio
+                state_color: false
+              - type: entities
+                entities:
+                  - entity: input_datetime.s7_period_3
+                title: Inizio
+              - type: entities
+                entities:
+                  - entity: input_datetime.s7_period_4
+                title: Inizio
+          - type: horizontal-stack
+            cards:
+              - type: entity
+                entity: input_number.s7_temperature_period_1
+                unit: °c
+                name: Temperatura
+                state_color: false
+              - type: entity
+                entity: input_number.s7_temperature_period_2
+                unit: °c
+                name: Temperatura
+                state_color: false
+              - type: entity
+                entity: input_number.s7_temperature_period_3
+                unit: °c
+                name: Temperatura
+                state_color: false
+              - type: entity
+                entity: input_number.s7_temperature_period_4
+                unit: °c
+                name: Temperatura
+                state_color: false
+          - type: horizontal-stack
+            cards:
+              - type: markdown
+                content: >-
+                  Valore in **%** massimo di apertura della finestra laterale e
+                  colmo rispetto la temperatura indicata nel periodo.
+                title: Strategia apertura
+          - type: horizontal-stack
+            cards:
+              - type: entity
+                entity: input_number.s7_window_top_max_open_period_1
+                name: Colmi
+                unit: '%'
+              - type: entity
+                entity: input_number.s7_window_top_max_open_period_2
+                name: Colmi
+                unit: '%'
+              - type: entity
+                entity: input_number.s7_window_top_max_open_period_3
+                name: Colmi
+                unit: '%'
+              - type: entity
+                entity: input_number.s7_window_top_max_open_period_4
+                name: Colmi
+                unit: '%'
+          - type: horizontal-stack
+            cards:
+              - type: entity
+                entity: input_number.s7_window_low_max_open_period_1
+                name: Laterali
+                unit: '%'
+              - type: entity
+                entity: input_number.s7_window_low_max_open_period_2
+                name: Laterali
+                unit: '%'
+              - type: entity
+                entity: input_number.s7_window_low_max_open_period_3
+                name: Laterali
+                unit: '%'
+              - type: entity
+                entity: input_number.s7_window_low_max_open_period_4
+                name: Laterali
+                unit: '%'
+  - title: Vento
+    path: vento
+    type: panel
+    badges: []
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: markdown
+            content: >-
+              Valore in **%** massimo di apertura della finestra laterale e
+              colmo rispetto la soglia controvento e sottovento.
+            title: Strategia finestre serra 7 - Vento
+          - type: horizontal-stack
+            cards:
+              - type: glance
+                entities:
+                  - entity: input_boolean.s7_period_1
+                  - entity: input_boolean.s7_period_2
+                  - entity: input_boolean.s7_period_3
+                  - entity: input_boolean.s7_period_4
+                state_color: true
+          - type: horizontal-stack
+            cards:
+              - type: entities
+                entities:
+                  - entity: input_select.s7_upwind
+                    name: Controvento
+                    icon: mdi:arrow-collapse-down
+                  - entity: input_select.s7_downwind
+                    name: Sottovento
+                    icon: mdi:arrow-expand-up
+                title: Provenienza vento
+          - type: markdown
+            content: >-
+              posizioni finestre per sottovento **moderato**. Il valore di
+              riferimento per sottovento moderato può essere impostato nella
+              sezione **Valori Ambientali**.
+            title: Sottovento moderato
+          - type: horizontal-stack
+            cards:
+              - type: entities
+                entities:
+                  - entity: >-
+                      input_number.s7_window_top_max_open_period_1_downwind_moderate
+                    name: Colmi
+                  - entity: >-
+                      input_number.s7_window_low_max_open_period_1_downwind_moderate
+                    name: Laterali
+              - type: entities
+                entities:
+                  - entity: >-
+                      input_number.s7_window_top_max_open_period_2_downwind_moderate
+                    name: Colmi
+                  - entity: >-
+                      input_number.s7_window_low_max_open_period_2_downwind_moderate
+                    name: Laterali
+              - type: entities
+                entities:
+                  - entity: >-
+                      input_number.s7_window_top_max_open_period_3_downwind_moderate
+                    name: Colmi
+                  - entity: >-
+                      input_number.s7_window_low_max_open_period_3_downwind_moderate
+                    name: Laterali
+              - type: entities
+                entities:
+                  - entity: >-
+                      input_number.s7_window_top_max_open_period_4_downwind_moderate
+                    name: Colmi
+                  - entity: >-
+                      input_number.s7_window_low_max_open_period_4_downwind_moderate
+                    name: Laterali
+          - type: markdown
+            content: ' posizioni finestre per sottovento **intenso**. Il valore di riferimento per sottovento intenso può essere impostato nella sezione **Valori Ambientali**.'
+            title: Sottovento intenso
+          - type: horizontal-stack
+            cards:
+              - type: entities
+                entities:
+                  - entity: >-
+                      input_number.s7_window_top_max_open_period_1_downwind_strong
+                    name: Colmi
+                  - entity: >-
+                      input_number.s7_window_low_max_open_period_1_downwind_strong
+                    name: Laterali
+              - type: entities
+                entities:
+                  - entity: >-
+                      input_number.s7_window_top_max_open_period_2_downwind_strong
+                    name: Colmi
+                  - entity: >-
+                      input_number.s7_window_low_max_open_period_2_downwind_strong
+                    name: Laterali
+              - type: entities
+                entities:
+                  - entity: >-
+                      input_number.s7_window_top_max_open_period_3_downwind_strong
+                    name: Colmi
+                  - entity: >-
+                      input_number.s7_window_low_max_open_period_3_downwind_strong
+                    name: Laterali
+              - type: entities
+                entities:
+                  - entity: >-
+                      input_number.s7_window_top_max_open_period_4_downwind_strong
+                    name: Colmi
+                  - entity: >-
+                      input_number.s7_window_low_max_open_period_4_downwind_strong
+                    name: Laterali
+          - type: markdown
+            content: ' posizioni finestre per controvento **moderato**. Il valore di riferimento per controvento moderato può essere impostato nella sezione **Valori Ambientali**.'
+            title: Controvento moderato
+          - type: horizontal-stack
+            cards:
+              - type: entities
+                entities:
+                  - entity: >-
+                      input_number.s7_window_top_max_open_period_1_upwind_moderate
+                    name: Colmi
+                  - entity: >-
+                      input_number.s7_window_low_max_open_period_1_upwind_moderate
+                    name: Laterali
+              - type: entities
+                entities:
+                  - entity: >-
+                      input_number.s7_window_top_max_open_period_2_upwind_moderate
+                    name: Colmi
+                  - entity: >-
+                      input_number.s7_window_low_max_open_period_2_upwind_moderate
+                    name: Laterali
+              - type: entities
+                entities:
+                  - entity: >-
+                      input_number.s7_window_top_max_open_period_3_upwind_moderate
+                    name: Colmi
+                  - entity: >-
+                      input_number.s7_window_low_max_open_period_3_upwind_moderate
+                    name: Laterali
+              - type: entities
+                entities:
+                  - entity: >-
+                      input_number.s7_window_top_max_open_period_4_upwind_moderate
+                    name: Colmi
+                  - entity: >-
+                      input_number.s7_window_low_max_open_period_4_upwind_moderate
+                    name: Laterali
+          - type: markdown
+            content: ' posizioni finestre per controvento **intenso**. Il valore di riferimento per controvento intenso può essere impostato nella sezione **Valori Ambientali**.'
+            title: Controvento Intenso
+          - type: horizontal-stack
+            cards:
+              - type: entities
+                entities:
+                  - entity: input_number.s7_window_top_max_open_period_1_upwind_strong
+                    name: Colmi
+                  - entity: input_number.s7_window_low_max_open_period_1_upwind_strong
+                    name: Laterali
+              - type: entities
+                entities:
+                  - entity: input_number.s7_window_top_max_open_period_2_upwind_strong
+                    name: Colmi
+                  - entity: input_number.s7_window_low_max_open_period_2_upwind_strong
+                    name: Laterali
+              - type: entities
+                entities:
+                  - entity: input_number.s7_window_top_max_open_period_3_upwind_strong
+                    name: Colmi
+                  - entity: input_number.s7_window_low_max_open_period_3_upwind_strong
+                    name: Laterali
+              - type: entities
+                entities:
+                  - entity: input_number.s7_window_top_max_open_period_4_upwind_strong
+                    name: Colmi
+                  - entity: input_number.s7_window_low_max_open_period_4_upwind_strong
+                    name: Laterali
+  - title: Impostazioni
+    path: impostazioni
+    badges: []
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: markdown
+            content: >-
+              Impostazioni relative a tempi di apertura delle finestre,
+              automazioni etc.
+            title: Impostazioni
+          - type: entities
+            entities:
+              - entity: input_number.s7_open_close_time_window_low
+                name: Finestre laterali
+              - entity: input_number.s7_open_close_time_window_top
+                name: Colmi
+            title: Tempi apertura finestre
+          - type: entities
+            entities:
+              - entity: input_number.s7_open_close_step_window_low
+                name: Finestre laterali
+              - entity: input_number.s7_open_close_step_window_top
+                name: Colmi
+            title: Minimo movimento finestre
+          - type: entities
+            entities:
+              - entity: input_boolean.s7_window_low_automation
+              - entity: input_boolean.s7_window_top_automation
+            title: Automazioni
+          - type: entities
+            entities:
+              - entity: input_number.windows_automation_frequency
+            title: Frequenza di controllo finestre
