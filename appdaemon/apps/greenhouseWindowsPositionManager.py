@@ -299,7 +299,7 @@ class GreenhouseWindowsPositionManager(hass.Hass):
         #checking the target temperature
         targetTemperature = float(currentPeriod.targetTemperature)
         
-        temperatureComparison = "ABOVE" if currentTemperature > targetTemperature else "BELOW"
+        temperatureComparison = "ABOVE" if float(currentTemperature) > targetTemperature else "BELOW"
         self.log("current temperature: %s it's %s the target temperature %s", currentTemperature, temperatureComparison, targetTemperature)
         self.log("temperature trend is: %s", temperatureTrend)
 
@@ -594,7 +594,7 @@ class GreenhouseWindowsPositionManager(hass.Hass):
         return document
 
 
-    def calculateWindowFuturePosition(self, windowEntity, currentPeriod: PeriodConfiguration, needToOpen, windowsMinStep ):
+    def  calculateWindowFuturePosition(self, windowEntity, currentPeriod: PeriodConfiguration, needToOpen, windowsMinStep ):
         self.log("Calculating current position for window: %s", windowEntity['name'])
 
         windowCurrentPosition : int = int(windowEntity['state'])
