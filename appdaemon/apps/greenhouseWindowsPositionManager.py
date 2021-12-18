@@ -166,6 +166,7 @@ class GreenhouseWindowsPositionManager(hass.Hass):
         rainSensor                      = data.get('rainingSensor', False)
         windSensor                      = data.get('windSensor', False)
         windDirectionSensor             = data.get('windDirectionSensor', False)
+        structure_orientation           = data.get('structure_orientation', None)
 
         self.log("event data collected: %s", data)
         
@@ -204,7 +205,8 @@ class GreenhouseWindowsPositionManager(hass.Hass):
                 openCloseTime,
                 rainSensor,
                 windSensor,
-                windDirectionSensor)
+                windDirectionSensor,
+                structure_orientation)
         
         if event == "raining":
             self.manageWindowsByRain(currentPeriod,
@@ -217,7 +219,8 @@ class GreenhouseWindowsPositionManager(hass.Hass):
                 openCloseTime,
                 rainSensor,
                 windSensor,
-                windDirectionSensor)
+                windDirectionSensor,
+                structure_orientation)
 
 
     def manageWindowsByWind(self,
@@ -226,42 +229,53 @@ class GreenhouseWindowsPositionManager(hass.Hass):
         openCloseTime,
         rainSensor,
         windSensor,
-        windDirectionSensor
+        windDirectionSensor,
+        structure_orientation
     ):
         entities = []
         self._getEntitiesInGroup(windowsGroup, entities)
 
+        upwindSource    = structure_orientation['upwind']
+        downwindSource  = structure_orientation['downwind']
+        self.log("Structure exposure to Upwind: %s, Downwind: %s", upwindSource, downwindSource)
+
         for entity in entities:
             entityDocument = self.buildEntityDocumentByEntityName(entity, None, None, None)
             
-            if rainSensor == WEATHER_RAINING and entityDocument["type"] == WINDOW_TOP_TYPE_KEY:
+            if rainSensor == WEATHER_RAINING and self.isWindowTopType(entityDocument):
                 self.log("skipping current top window %s on wind event due rain", entityDocument['name'])
                 continue
 
-            windowOrientation   = entityDocument[WINDOW_ORIENTATION_KEY]
-            windowDownwind      = self._calcDownwindByOrientation(windowOrientation)
-            self.log("window orientation: %s, downwind %s", windowOrientation, windowDownwind)
-
-            toPosition : int = None
-            if windDirectionSensor == windowOrientation:
-                #upwind
-                if windSensor == WEATHER_WIND_MODERATE:
-                    toPosition =  int(currentPeriod.windowTopMaxOpenUpwindModerate) if self.isWindowTopType(entityDocument) else  int(currentPeriod.windowLowMaxOpenUpwindModerate) 
+            toPosition = None
+            isOnUpwindDownwind = self._checkIsOnUpwindDownwind(entityDocument, windSensor, windDirectionSensor, upwindSource, downwindSource)
+            if isOnUpwindDownwind and self.isWindowTopType(entityDocument):
+                if isOnUpwindDownwind == WEATHER_WIND_DOWNWIND_KEY:
+                    #downwind
+                    if windSensor == WEATHER_WIND_MODERATE:
+                        toPosition = currentPeriod.windowTopMaxOpenDownwindModerate
+                    else:
+                        toPosition = currentPeriod.windowTopMaxOpenDownwindHigh
                 else:
-                    toPosition =  int(currentPeriod.windowTopMaxOpenUpwindHigh) if self.isWindowTopType(entityDocument) else  int(currentPeriod.windowLowMaxOpenUpwindHigh)
+                    #upwind
+                    if windSensor == WEATHER_WIND_MODERATE:
+                        toPosition = currentPeriod.windowTopMaxOpenUpwindModerate
+                    else:
+                        toPosition = currentPeriod.windowTopMaxOpenUpwindHigh
+            elif isOnUpwindDownwind and not self.isWindowTopType(entityDocument):
+                if isOnUpwindDownwind == WEATHER_WIND_DOWNWIND_KEY:
+                     #downwind
+                    #windows low are excluded from upwinds because the greenhouse has four sides and the opposite side of this works like as a shield for this window.
+                    if windSensor == WEATHER_WIND_MODERATE:
+                        toPosition =  currentPeriod.windowLowMaxOpenDownwindModerate
+                    else:
+                        toPosition = currentPeriod.windowLowMaxOpenDownwindHigh
+               
             
-            elif windDirectionSensor == windowDownwind:    
-                #downwind
-                if windSensor == WEATHER_WIND_MODERATE:
-                    toPosition = int(currentPeriod.windowTopMaxOpenDownwindModerate) if self.isWindowTopType(entityDocument) else int(currentPeriod.windowLowMaxOpenDownwindModerate) 
-                else:
-                    toPosition = int(currentPeriod.windowTopMaxOpenDownwindHigh) if self.isWindowTopType(entityDocument) else int(currentPeriod.windowLowMaxOpenDownwindHigh)
-
             if toPosition:    
                 if self.isWindowTopType(entityDocument):
-                    self.windowsTakeAWhile(entityDocument['entity'], entityDocument['topicCommand'], entityDocument['state'], int(toPosition), self._getWindowTopOpenCloseTime(openCloseTime))
+                    self.windowsTakeAWhile(entityDocument['entity'], entityDocument['topicCommand'], entityDocument['state'], int(float(toPosition)), self._getWindowTopOpenCloseTime(openCloseTime))
                 else:
-                    self.windowsTakeAWhile(entityDocument['entity'], entityDocument['topicCommand'], entityDocument['state'], int(toPosition), self._getWindowLowOpenCloseTime(openCloseTime))
+                    self.windowsTakeAWhile(entityDocument['entity'], entityDocument['topicCommand'], entityDocument['state'], int(float(toPosition)), self._getWindowLowOpenCloseTime(openCloseTime))
 
     def manageWindowsByRain(self,
         currentPeriod : PeriodConfiguration, 
@@ -289,12 +303,15 @@ class GreenhouseWindowsPositionManager(hass.Hass):
         openCloseTime,
         rainSensor,
         windSensor,
-        windDirectionSensor):
+        windDirectionSensor,
+        structure_orientation):
         
-        windowLowOpenCloseTime = self._getWindowLowOpenCloseTime(openCloseTime)
-        windowTopOpenCloseTime = self._getWindowTopOpenCloseTime(openCloseTime)
-        toPosition             = None
-        entities               = []
+        windowLowOpenCloseTime  = self._getWindowLowOpenCloseTime(openCloseTime)
+        windowTopOpenCloseTime  = self._getWindowTopOpenCloseTime(openCloseTime)
+        upwindSource            = structure_orientation['upwind']
+        downwindSource          = structure_orientation['downwind']
+        toPosition              = None
+        entities                = []
 
         #checking the target temperature
         targetTemperature = float(currentPeriod.targetTemperature)
@@ -312,8 +329,9 @@ class GreenhouseWindowsPositionManager(hass.Hass):
                 self.log("window name %s skipped due rain presence", entityDocument['name'])
                 continue
 
-            if windSensor != WEATHER_WIND_NONE and windDirectionSensor in entityDocument['orientation'] :
-                self.log("window name %s with orientation: %s skipped due wind presence from: %s and intensity: %s", entityDocument['name'], entityDocument['orientation'], windDirectionSensor, windSensor)
+            isOnUpwindDownwind = self._checkIsOnUpwindDownwind(entityDocument, windSensor, windDirectionSensor, upwindSource, downwindSource)
+            if isOnUpwindDownwind:
+                self.log("window name %s with orientation: %s skipped due wind presence direction: %s and intensity: %s. The window is on: %s ", entityDocument['name'], entityDocument['orientation'], windDirectionSensor, windSensor, isOnUpwindDownwind)
                 continue
 
             if targetTemperature-currentTemperature < -1: #TODO METTERE UNA TOLLERANZA CONFIGURABILE
@@ -380,6 +398,7 @@ class GreenhouseWindowsPositionManager(hass.Hass):
             if state == "on" or state == True:
                 currentIsActive = True
             else:
+                continue
                 currentIsActive = False
 
             #getting period value
@@ -453,17 +472,42 @@ class GreenhouseWindowsPositionManager(hass.Hass):
         ##closig last end period with the period value of the first
         index = 0
         firstStartPeriod = None
-        for p in periods:
-            if index == 0:
-                firstStartPeriod = p.startPeriod
+        if len(periods) == 1:
+            firstStartPeriod = periods[0].startPeriod
+            testDate = datetime.datetime(2021, 12, 18, firstStartPeriod.hour, firstStartPeriod.minute, 0)
+            endPeriod =  (testDate - datetime.timedelta(seconds=1)).time()
+            periods[0].setEndPeriod(endPeriod)
+        else: 
+            for p in periods:
+                if index == 0:
+                    firstStartPeriod = p.startPeriod
+                    index = index+1
+                    continue
+                else:
+                    periods[index-1].setEndPeriod(p.startPeriod)
                 index = index+1
-                continue
-            else:
-                periods[index-1].setEndPeriod(p.startPeriod)
-            index = index+1
 
-        periods[len(periods)-1].setEndPeriod(firstStartPeriod)
+            periods[len(periods)-1].setEndPeriod(firstStartPeriod)
 
+
+    def _checkIsOnUpwindDownwind(self, entityDocument, windSensor, windDirection, structureUpwind, structureDownwind):
+
+        if windSensor == WEATHER_WIND_NONE:
+            return None
+
+        windowOrientation   = entityDocument[WINDOW_ORIENTATION_KEY]
+
+        if self.isWindowTopType(entityDocument):
+            if windDirection == self._calcBackwardOrientation(structureDownwind):
+                #downwind
+                return WEATHER_WIND_DOWNWIND_KEY
+            elif windDirection == self._calcBackwardOrientation(structureUpwind):
+                return WEATHER_WIND_UPWIND_KEY
+        else:
+            if self._calcBackwardOrientation(windDirection)  == windowOrientation:
+                return WEATHER_WIND_DOWNWIND_KEY
+
+        return None
 
     def _extractWindSettingsFromParameters(self, groupEntity, windWindowMaxOpen):
 
@@ -662,7 +706,7 @@ class GreenhouseWindowsPositionManager(hass.Hass):
             return 0
 
     
-    def _calcDownwindByOrientation(self, orientation):
+    def _calcBackwardOrientation(self, orientation):
         compass = {
             "Nord"      : 0,
             "Nord Est"  : 45,
@@ -675,14 +719,17 @@ class GreenhouseWindowsPositionManager(hass.Hass):
         }
 
         calcDownwind = compass[orientation] +180
+
         if calcDownwind > 360:
             calcDownwind = calcDownwind-360
-        
+        elif calcDownwind == 360:
+            calcDownwind = 0
+
         for key, val in compass.items():
             if val == calcDownwind:
                 return key
         
-        self.log("Downwind not calculated. Please check the orientation value..", level="ERROR")
+        self.log("Downwind not calculated. Please check the orientation value.. ordientation: %s", orientation, level="ERROR")
         
         return None
 
