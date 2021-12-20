@@ -239,33 +239,21 @@ views:
                   - entity: >-
                       input_number.s7_window_top_max_open_period_1_upwind_moderate
                     name: Colmi
-                  - entity: >-
-                      input_number.s7_window_low_max_open_period_1_upwind_moderate
-                    name: Laterali
               - type: entities
                 entities:
                   - entity: >-
                       input_number.s7_window_top_max_open_period_2_upwind_moderate
                     name: Colmi
-                  - entity: >-
-                      input_number.s7_window_low_max_open_period_2_upwind_moderate
-                    name: Laterali
               - type: entities
                 entities:
                   - entity: >-
                       input_number.s7_window_top_max_open_period_3_upwind_moderate
                     name: Colmi
-                  - entity: >-
-                      input_number.s7_window_low_max_open_period_3_upwind_moderate
-                    name: Laterali
               - type: entities
                 entities:
                   - entity: >-
                       input_number.s7_window_top_max_open_period_4_upwind_moderate
                     name: Colmi
-                  - entity: >-
-                      input_number.s7_window_low_max_open_period_4_upwind_moderate
-                    name: Laterali
           - type: markdown
             content: ' posizioni finestre per controvento **intenso**. Il valore di riferimento per controvento intenso può essere impostato nella sezione **Valori Ambientali**.'
             title: Controvento Intenso
@@ -275,26 +263,18 @@ views:
                 entities:
                   - entity: input_number.s7_window_top_max_open_period_1_upwind_strong
                     name: Colmi
-                  - entity: input_number.s7_window_low_max_open_period_1_upwind_strong
-                    name: Laterali
               - type: entities
                 entities:
                   - entity: input_number.s7_window_top_max_open_period_2_upwind_strong
                     name: Colmi
-                  - entity: input_number.s7_window_low_max_open_period_2_upwind_strong
-                    name: Laterali
               - type: entities
                 entities:
                   - entity: input_number.s7_window_top_max_open_period_3_upwind_strong
                     name: Colmi
-                  - entity: input_number.s7_window_low_max_open_period_3_upwind_strong
-                    name: Laterali
               - type: entities
                 entities:
                   - entity: input_number.s7_window_top_max_open_period_4_upwind_strong
                     name: Colmi
-                  - entity: input_number.s7_window_low_max_open_period_4_upwind_strong
-                    name: Laterali
   - title: Impostazioni
     path: impostazioni
     badges: []

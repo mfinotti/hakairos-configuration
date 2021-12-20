@@ -30,9 +30,8 @@ class PeriodConfiguration():
     windowTopMaxOpenDownwindHigh        : int 
     windowLowMaxOpenDownwindHigh        : int
     windowTopMaxOpenUpwindModerate      : int
-    windowLowMaxOpenUpwindModerate      : int
     windowTopMaxOpenUpwindHigh          : int
-    windowLowMaxOpenUpwindHigh          : int
+    
 
 
     def __init__(self, isActive, startPeriod, targetTemperature, windowLowMaxOpen, windowTopMaxOpen,
@@ -41,9 +40,8 @@ class PeriodConfiguration():
         windowTopMaxOpenDownwindHigh        : int = 0,
         windowLowMaxOpenDownwindHigh        : int = 0,
         windowTopMaxOpenUpwindModerate      : int = 0,
-        windowLowMaxOpenUpwindModerate      : int = 0,
         windowTopMaxOpenUpwindHigh          : int = 0,
-        windowLowMaxOpenUpwindHigh          : int = 0,
+        
     ) -> None:
         self.isActive               = isActive
         self.startPeriod            = datetime.datetime.strptime(startPeriod, "%H:%M:%S").time() 
@@ -56,9 +54,7 @@ class PeriodConfiguration():
         self.windowTopMaxOpenDownwindHigh       = windowTopMaxOpenDownwindHigh
         self.windowLowMaxOpenDownwindHigh       = windowLowMaxOpenDownwindHigh
         self.windowTopMaxOpenUpwindModerate     = windowTopMaxOpenUpwindModerate
-        self.windowLowMaxOpenUpwindModerate     = windowLowMaxOpenUpwindModerate
         self.windowTopMaxOpenUpwindHigh         = windowTopMaxOpenUpwindHigh
-        self.windowLowMaxOpenUpwindHigh         = windowLowMaxOpenUpwindHigh
 
 
     # @property
@@ -104,19 +100,10 @@ class PeriodConfiguration():
     # @property
     def windowTopMaxOpenUpwindModerate(self):
         return self.windowTopMaxOpenUpwindModerate
-
-    # @property
-    def windowLowMaxOpenUpwindModerate(self):
-        return self.windowLowMaxOpenUpwindModerate
     
     # @property
     def windowTopMaxOpenUpwindHigh(self):
         return self.windowTopMaxOpenUpwindHigh
-
-    # @property
-    def windowLowMaxOpenUpwindHigh(self):
-        return self.windowLowMaxOpenUpwindHigh
-
 
     # @endPeriod.setter
     def setEndPeriod(self, value):
@@ -137,9 +124,7 @@ class PeriodConfiguration():
             +", windowTopMaxOpenDownwindHigh:"+str(self.windowTopMaxOpenDownwindHigh)
             +", windowLowMaxOpenDownwindHigh:"+str(self.windowLowMaxOpenDownwindHigh)
             +", windowTopMaxOpenUpwindModerate:"+str(self.windowTopMaxOpenUpwindModerate)
-            +", windowLowMaxOpenUpwindModerate:"+str(self.windowLowMaxOpenUpwindModerate)
             +", windowTopMaxOpenUpwindHigh:"+str(self.windowTopMaxOpenUpwindHigh)
-            +", windowLowMaxOpenUpwindHigh:"+str(self.windowLowMaxOpenUpwindHigh)
         )
 
 class GreenhouseWindowsPositionManager(hass.Hass):
@@ -442,12 +427,6 @@ class GreenhouseWindowsPositionManager(hass.Hass):
             if WEATHER_WIND_DOWNWIND_KEY in windWindowLowMaxOpen:
                 if WEATHER_WIND_STRONG_KEY in windWindowLowMaxOpen[WEATHER_WIND_DOWNWIND_KEY]:
                     periodWindowLowDownwindStrongMaxOpen = windWindowLowMaxOpen[WEATHER_WIND_DOWNWIND_KEY][WEATHER_WIND_STRONG_KEY][index]    
-            if WEATHER_WIND_UPWIND_KEY in windWindowLowMaxOpen:
-                if WEATHER_WIND_MODERATE_KEY in windWindowLowMaxOpen[WEATHER_WIND_UPWIND_KEY]:
-                    periodWindowLowUpwindModerateMaxOpen = windWindowLowMaxOpen[WEATHER_WIND_UPWIND_KEY][WEATHER_WIND_MODERATE_KEY][index]
-            if WEATHER_WIND_UPWIND_KEY in windWindowLowMaxOpen:
-                if WEATHER_WIND_STRONG_KEY in windWindowLowMaxOpen[WEATHER_WIND_DOWNWIND_KEY]:
-                    periodWindowLowUpwindStrongMaxOpen = windWindowLowMaxOpen[WEATHER_WIND_UPWIND_KEY][WEATHER_WIND_STRONG_KEY][index]
 
             period = PeriodConfiguration(
                         isActive=currentIsActive, 
@@ -460,9 +439,7 @@ class GreenhouseWindowsPositionManager(hass.Hass):
                         windowTopMaxOpenUpwindModerate=periodWindowTopUpwindModerateMaxOpen,
                         windowTopMaxOpenUpwindHigh=periodWindowTopUpwindStrongMaxOpen,
                         windowLowMaxOpenDownwindModerate=periodWindowLowDownwindModerateMaxOpen,
-                        windowLowMaxOpenDownwindHigh=periodWindowLowDownwindStrongMaxOpen,
-                        windowLowMaxOpenUpwindModerate=periodWindowLowUpwindModerateMaxOpen,
-                        windowLowMaxOpenUpwindHigh=periodWindowLowUpwindStrongMaxOpen
+                        windowLowMaxOpenDownwindHigh=periodWindowLowDownwindStrongMaxOpen
                         )
                     
             periods.append(period)

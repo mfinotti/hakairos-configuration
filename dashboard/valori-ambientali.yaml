@@ -46,13 +46,11 @@ views:
                   action: none
                 icon_height: 40px
               - type: entity
-                entity: input_number.w_wind_level1
+                entity: input_number.w_uv_level1
                 name: Moderato
-                unit: m/s
               - type: entity
-                entity: input_number.w_wind_level2
-                name: Intenso
-                unit: m/s
+                entity: input_number.w_uv_level2
+                name: Alto
           - type: horizontal-stack
             cards:
               - type: button
@@ -66,8 +64,8 @@ views:
                   action: none
                 icon_height: 40px
               - type: entity
-                entity: input_number.w_wind_level1
+                entity: input_number.w_rain_level1
                 name: Leggera
               - type: entity
-                entity: input_number.w_wind_level2
+                entity: input_number.w_rain_level2
                 name: Intensa
