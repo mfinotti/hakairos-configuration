@@ -453,32 +453,27 @@ views:
                     max: 100
               - type: entities
                 entities:
-                  - entity: sensor.s8_window_front_mountain_side1
-                  - entity: sensor.s8_window_front_sea_side1
-                  - entity: sensor.s8_window_left_side1
-                  - entity: sensor.s8_window_right_side1
-                  - entity: sensor.s8_window_top1
-                  - entity: sensor.s8_window_top2
-                title: Posizione finestre
-      - type: vertical-stack
-        cards:
-          - type: markdown
-            content: >-
-              Impostazioni relative a tempi di apertura delle finestre,
-              automazioni etc.
-            title: Impostazioni
-          - type: entities
-            entities:
-              - entity: input_number.s8_open_close_time_window_low
-                name: Finestre laterali
-              - entity: input_number.s8_open_close_time_window_top
-                name: Colmi
-            title: Tempi apertura finestre
-          - type: entities
-            entities:
-              - entity: input_boolean.s8_window_low_automation
-              - entity: input_boolean.s8_window_top_automation
-            title: Automazioni
+                  - entity: sensor.w_wind_intensity_frontend
+                    icon: hass:windsock
+                    name: Velocità vento
+                  - entity: sensor.w_wind_direction_frontend
+                    name: Direzione vento
+                    icon: hass:apple-safari
+                  - entity: sensor.w_wind_gust_frontend
+                    name: Velocità raffica
+                    icon: hass:weather-windy
+                header:
+                  type: buttons
+                  entities: []
+      - type: entities
+        entities:
+          - entity: sensor.s8_window_front_mountain_side1
+          - entity: sensor.s8_window_front_sea_side1
+          - entity: sensor.s8_window_left_side1
+          - entity: sensor.s8_window_right_side1
+          - entity: sensor.s8_window_top1
+          - entity: sensor.s8_window_top2
+        title: Posizione finestre
   - title: admin
     path: admin
     visible:
