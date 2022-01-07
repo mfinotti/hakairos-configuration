@@ -131,25 +131,25 @@ views:
             cards:
               - type: entities
                 entities:
-                  - entity: sensor.s7_window_top1
+                  - entity: sensor.frontend_s7_window_top1
                     name: Colmi
-                  - entity: sensor.s7_window_right_side1
+                  - entity: sensor.frontend_s7_window_right_side1
                     name: Laterali
-                  - entity: sensor.s7_window_front_sea_side_lx1
+                  - entity: sensor.frontend_s7_window_front_sea_side_lx1
                     name: Lato mare
-                  - entity: sensor.s7_window_front_mountain_side_lx1
+                  - entity: sensor.frontend_s7_window_front_mountain_side_lx1
                     name: Lato monte
                 title: Finestre serra 7
                 state_color: false
               - type: entities
                 entities:
-                  - entity: sensor.s8_window_top1
+                  - entity: sensor.frontend_s8_window_top1
                     name: Colmi
-                  - entity: sensor.s8_window_right_side1
+                  - entity: sensor.frontend_s8_window_right_side1
                     name: Laterali
-                  - entity: sensor.s8_window_front_mountain_side1
+                  - entity: sensor.frontend_s8_window_front_mountain_side1
                     name: Lato mare
-                  - entity: sensor.s8_window_front_mountain_side1
+                  - entity: sensor.frontend_s8_window_front_mountain_side1
                     name: Lato monte
                 title: Finestre serra 8
                 state_color: false
@@ -377,16 +377,16 @@ views:
         cards:
           - type: entities
             entities:
-              - entity: sensor.s7_window_front_mountain_side_lx1
-              - entity: sensor.s7_window_front_mountain_side_rx1
-              - entity: sensor.s7_window_front_sea_side_lx1
-              - entity: sensor.s7_window_front_sea_side_rx1
-              - entity: sensor.s7_window_left_side1
-              - entity: sensor.s7_window_right_side1
-              - entity: sensor.s7_window_top1
-              - entity: sensor.s7_window_top2
-              - entity: sensor.s7_window_top4
-              - entity: sensor.s7_window_top3
+              - entity: sensor.frontend_s7_window_front_mountain_side_lx1
+              - entity: sensor.frontend_s7_window_front_mountain_side_rx1
+              - entity: sensor.frontend_s7_window_front_sea_side_lx1
+              - entity: sensor.frontend_s7_window_front_sea_side_rx1
+              - entity: sensor.frontend_s7_window_left_side1
+              - entity: sensor.frontend_s7_window_right_side1
+              - entity: sensor.frontend_s7_window_top1
+              - entity: sensor.frontend_s7_window_top2
+              - entity: sensor.frontend_s7_window_top4
+              - entity: sensor.frontend_s7_window_top3
             title: Posizione finestre
   - title: Serra 8
     path: serra-8
@@ -467,12 +467,12 @@ views:
                   entities: []
       - type: entities
         entities:
-          - entity: sensor.s8_window_front_mountain_side1
-          - entity: sensor.s8_window_front_sea_side1
-          - entity: sensor.s8_window_left_side1
-          - entity: sensor.s8_window_right_side1
-          - entity: sensor.s8_window_top1
-          - entity: sensor.s8_window_top2
+          - entity: sensor.frontend_s8_window_front_mountain_side1
+          - entity: sensor.frontend_s8_window_front_sea_side1
+          - entity: sensor.frontend_s8_window_left_side1
+          - entity: sensor.frontend_s8_window_right_side1
+          - entity: sensor.frontend_s8_window_top1
+          - entity: sensor.frontend_s8_window_top2
         title: Posizione finestre
   - title: admin
     path: admin

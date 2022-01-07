@@ -13,83 +13,9 @@ WEATHER_WIND_MODERATE_KEY               = "moderate"
 WEATHER_WIND_STRONG_KEY                 = "strong"
 WINDOW_TOP_TYPE_KEY                     = "window_top"
 WINDOW_LOW_TYPE_KEY                     = "window_low"
-
+WINDOW_ORIENTATION_KEY                  = "orientation"
 WINDOW_CLOSED_POSITION                  = 0
 WINDOW_OPEN_POSITION                    = 100
-
-WINDOW_ACTIVE_KEY                       = "_active"
-WINDOW_TOPIC_KEY                        = "_topic"
-WINDOW_NAME_KEY                         = "_name"
-WINDOW_POSITION_KEY                     = "_position"
-WINDOW_TYPE_KEY                         = "_type"
-WINDOW_ORIENTATION_KEY                  = "_orientation"
-
-
-class WindowEntity():
-    isActive                            : bool
-    id                                  : str
-    topic                               : str
-    name                                : str
-    currentPosition                     : int
-    entityToUpdate                      : str
-    windowType                          : str
-    windowOrientation                   : str
-
-    def __init__(self, isActive, id, name, topic, currentPosition, entityToUpdate, windowType, windowOrientation
-    ) -> None: 
-        self.isActive           = isActive
-        self.id                 = id
-        self.name               = name
-        self.topic              = topic
-        self.currentPosition    = currentPosition
-        self.entityToUpdate     = entityToUpdate
-        self.windowType         = windowType
-        self.windowOrientation  = windowOrientation
-
-    # @property
-    def isActive(self):
-        return self.isActive
-
-    # @property
-    def id(self):
-        return self.id
-    
-    # @property
-    def name(self):
-        return self.name
-    
-    # @property
-    def topic(self):
-        return self.topic
-
-    # @property
-    def currentPosition(self):
-        return self.currentPosition
-    
-    # @property
-    def windowType(self):
-        return self.windowType
-
-    # @property
-    def entityToUpdate(self):
-        return self.entityToUpdate
-
-    # @property
-    def windowOrientation(self):
-        return self.windowOrientation
-
-    def __str__(self) -> str:
-        activeVal = str(self.isActive)
-        return ("isActive:"+ activeVal 
-            +", id:"+self.id
-            +", name:"+self.name
-            +", topic:"+self.topic
-            +", currentPosition:"+str(self.currentPosition)
-            +", entityToUpdate:"+str(self.entityToUpdate)
-            +", windowType:"+self.windowType
-            +", windowOrientation:"+self.windowOrientation
-        )
-
 
 class PeriodConfiguration():
     isActive                            : bool
@@ -204,7 +130,7 @@ class PeriodConfiguration():
 class GreenhouseWindowsPositionManager(hass.Hass):
 
     def initialize(self):
-        self.listen_event(self.manageWindows, "HA_MANAGE_WINDOWS3")
+        self.listen_event(self.manageWindows, "HA_MANAGE_WINDOWS2")
 
     def manageWindows(self, event_name, data, kwargs):    
         event                           = data.get('event')
@@ -231,7 +157,6 @@ class GreenhouseWindowsPositionManager(hass.Hass):
         
         #reset periods
         periods = []
-        windows = []
         #rebuild periods
         self.buildPeriods(periods, 
             groupPeriodActive               = groupPeriodActive, 
@@ -252,20 +177,15 @@ class GreenhouseWindowsPositionManager(hass.Hass):
 
         if currentPeriod:
             self.log("current period detected: %s", currentPeriod)
-            #rebuild windows entities
-            windows = self.buildWindows(entities)
         else:
             self.log("Period not found. skipping...", level="WARNING")
             return
-
-        if len(windows) == 0:
-            self.log("None windows found for this event. skipping..", level="WARNING")
 
         if event == "windows_check":
             self.manageWindowsByTemperature(currentPeriod, 
                 valueToCheck, 
                 temperatureTrend, 
-                windows, 
+                entities, 
                 windowsMinStep, 
                 openCloseTime,
                 rainSensor,
@@ -275,12 +195,12 @@ class GreenhouseWindowsPositionManager(hass.Hass):
         
         if event == "raining":
             self.manageWindowsByRain(currentPeriod,
-                windows,
+                entities,
                 openCloseTime)
 
         if event == "wind":
             self.manageWindowsByWind(currentPeriod,
-                windows,
+                entities,
                 openCloseTime,
                 rainSensor,
                 windSensor,
@@ -290,28 +210,30 @@ class GreenhouseWindowsPositionManager(hass.Hass):
 
     def manageWindowsByWind(self,
         currentPeriod : PeriodConfiguration, 
-        windowsEntity, 
+        windowsGroup, 
         openCloseTime,
         rainSensor,
         windSensor,
         windDirectionSensor,
         structure_orientation
     ):
+        entities = []
+        self._getEntitiesInGroup(windowsGroup, entities)
 
         upwindSource    = structure_orientation['upwind']
         downwindSource  = structure_orientation['downwind']
         self.log("Structure exposure to Upwind: %s, Downwind: %s", upwindSource, downwindSource)
 
-        for entity in windowsEntity:
-            entity : WindowEntity
+        for entity in entities:
+            entityDocument = self.buildEntityDocumentByEntityName(entity, None, None, None)
             
-            if rainSensor == WEATHER_RAINING and self.isWindowTopType(entity):
-                self.log("skipping current top window %s on wind event due rain", entity.name)
+            if rainSensor == WEATHER_RAINING and self.isWindowTopType(entityDocument):
+                self.log("skipping current top window %s on wind event due rain", entityDocument['name'])
                 continue
 
             toPosition = None
-            isOnUpwindDownwind = self._checkIsOnUpwindDownwind(entity, windSensor, windDirectionSensor, upwindSource, downwindSource)
-            if isOnUpwindDownwind and self.isWindowTopType(entity):
+            isOnUpwindDownwind = self._checkIsOnUpwindDownwind(entityDocument, windSensor, windDirectionSensor, upwindSource, downwindSource)
+            if isOnUpwindDownwind and self.isWindowTopType(entityDocument):
                 if isOnUpwindDownwind == WEATHER_WIND_DOWNWIND_KEY:
                     #downwind
                     if windSensor == WEATHER_WIND_MODERATE:
@@ -324,7 +246,7 @@ class GreenhouseWindowsPositionManager(hass.Hass):
                         toPosition = currentPeriod.windowTopMaxOpenUpwindModerate
                     else:
                         toPosition = currentPeriod.windowTopMaxOpenUpwindHigh
-            elif isOnUpwindDownwind and not self.isWindowTopType(entity):
+            elif isOnUpwindDownwind and not self.isWindowTopType(entityDocument):
                 if isOnUpwindDownwind == WEATHER_WIND_DOWNWIND_KEY:
                      #downwind
                     #windows low are excluded from upwinds because the greenhouse has four sides and the opposite side of this works like as a shield for this window.
@@ -335,30 +257,33 @@ class GreenhouseWindowsPositionManager(hass.Hass):
                
             
             if toPosition:    
-                if self.isWindowTopType(entity):
-                    self.windowsTakeAWhile(entity.entityToUpdate, entity.topic, entity.currentPosition, int(float(toPosition)), self._getWindowTopOpenCloseTime(openCloseTime))
+                if self.isWindowTopType(entityDocument):
+                    self.windowsTakeAWhile(entityDocument['entity'], entityDocument['topicCommand'], entityDocument['state'], int(float(toPosition)), self._getWindowTopOpenCloseTime(openCloseTime))
                 else:
-                    self.windowsTakeAWhile(entity.entityToUpdate, entity.topic, entity.currentPosition, int(float(toPosition)), self._getWindowLowOpenCloseTime(openCloseTime))
-
+                    self.windowsTakeAWhile(entityDocument['entity'], entityDocument['topicCommand'], entityDocument['state'], int(float(toPosition)), self._getWindowLowOpenCloseTime(openCloseTime))
 
     def manageWindowsByRain(self,
         currentPeriod : PeriodConfiguration, 
-        windowsEntity, 
+        windowsGroup, 
         openCloseTime
     ):
-        for entity in windowsEntity:
-            entity : WindowEntity
+        
+        entities = []
+        self._getEntitiesInGroup(windowsGroup, entities)
+
+        for entity in entities:
+            entityDocument = self.buildEntityDocumentByEntityName(entity, None, None, None)
             #close all windows top
-            if self.isWindowTopType(entity):
+            if self.isWindowTopType(entityDocument):
                 toPosition = WINDOW_CLOSED_POSITION
-                self.windowsTakeAWhile(entity.entityToUpdate, entity.topic, entity.currentPosition, toPosition, self._getWindowTopOpenCloseTime(openCloseTime))
+                self.windowsTakeAWhile(entityDocument['entity'], entityDocument['topicCommand'], entityDocument['state'], toPosition, self._getWindowTopOpenCloseTime(openCloseTime))
            
 
     def manageWindowsByTemperature(self, 
         currentPeriod : PeriodConfiguration, 
         currentTemperature, 
         temperatureTrend, 
-        windowsEntity,
+        windowsGroup, 
         windowsMinStep, 
         openCloseTime,
         rainSensor,
@@ -371,6 +296,7 @@ class GreenhouseWindowsPositionManager(hass.Hass):
         upwindSource            = structure_orientation['upwind']
         downwindSource          = structure_orientation['downwind']
         toPosition              = None
+        entities                = []
 
         #checking the target temperature
         targetTemperature = float(currentPeriod.targetTemperature)
@@ -379,18 +305,18 @@ class GreenhouseWindowsPositionManager(hass.Hass):
         self.log("current temperature: %s it's %s the target temperature %s", currentTemperature, temperatureComparison, targetTemperature)
         self.log("temperature trend is: %s", temperatureTrend)
 
+        self._getEntitiesInGroup(windowsGroup, entities)
 
-        for window in windowsEntity:
-            window : WindowEntity
+        for entity in entities:
+            entityDocument = self.buildEntityDocumentByEntityName(entity, None, None, None)
 
-            self.log("window: %s", window)
-            if rainSensor == WEATHER_RAINING and self.isWindowTopType(window):
-                self.log("window name %s skipped due rain presence", window.name)
+            if rainSensor == WEATHER_RAINING and self.isWindowTopType(entityDocument):
+                self.log("window name %s skipped due rain presence", entityDocument['name'])
                 continue
 
-            isOnUpwindDownwind = self._checkIsOnUpwindDownwind(window, windSensor, windDirectionSensor, upwindSource, downwindSource)
+            isOnUpwindDownwind = self._checkIsOnUpwindDownwind(entityDocument, windSensor, windDirectionSensor, upwindSource, downwindSource)
             if isOnUpwindDownwind:
-                self.log("window name %s with orientation: %s skipped due wind presence direction: %s and intensity: %s. The window is on: %s ", window.name, window.windowOrientation, windDirectionSensor, windSensor, isOnUpwindDownwind)
+                self.log("window name %s with orientation: %s skipped due wind presence direction: %s and intensity: %s. The window is on: %s ", entityDocument['name'], entityDocument['orientation'], windDirectionSensor, windSensor, isOnUpwindDownwind)
                 continue
 
             if targetTemperature-currentTemperature < -1: #TODO METTERE UNA TOLLERANZA CONFIGURABILE
@@ -400,13 +326,13 @@ class GreenhouseWindowsPositionManager(hass.Hass):
                 # CASE 2 trend = FALLING -> nothing to do, check again in the next iteration 
                 # CASE 3 trend = RISING -> very bad, we are far from setpoing
                 if temperatureTrend == "BALANCED":
-                    toPosition = self.calculateWindowFuturePosition(windowEntity=window, currentPeriod=currentPeriod, needToOpen=True, windowsMinStep=windowsMinStep)
+                    toPosition = self.calculateWindowFuturePosition(windowEntity=entityDocument, currentPeriod=currentPeriod, needToOpen=True, windowsMinStep=windowsMinStep)
 
                 elif temperatureTrend == "FALLING":
                     continue #good job kairos!! 
 
                 elif temperatureTrend == "RISING":
-                    toPosition = self.calculateWindowFuturePosition(windowEntity=window, currentPeriod=currentPeriod, needToOpen=True, windowsMinStep=windowsMinStep)
+                    toPosition = self.calculateWindowFuturePosition(windowEntity=entityDocument, currentPeriod=currentPeriod, needToOpen=True, windowsMinStep=windowsMinStep)
                 
             elif targetTemperature-currentTemperature > 1: #TODO METTERE UNA TOLLERANZA CONFIGURABILE          
                 
@@ -415,10 +341,10 @@ class GreenhouseWindowsPositionManager(hass.Hass):
                 # CASE 2 trend = FALLING -> very bad, the temperature are every minute more far from the setpoint
                 # CASE 3 trend = RISING ->  nothing to do, check again in the next iteration  
                 if temperatureTrend == "BALANCED":
-                    toPosition = self.calculateWindowFuturePosition(windowEntity=window, currentPeriod=currentPeriod, needToOpen=False, windowsMinStep=windowsMinStep)
+                    toPosition = self.calculateWindowFuturePosition(windowEntity=entityDocument, currentPeriod=currentPeriod, needToOpen=False, windowsMinStep=windowsMinStep)
 
                 elif temperatureTrend == "FALLING":
-                    toPosition = self.calculateWindowFuturePosition(windowEntity=window, currentPeriod=currentPeriod, needToOpen=False, windowsMinStep=windowsMinStep)  
+                    toPosition = self.calculateWindowFuturePosition(windowEntity=entityDocument, currentPeriod=currentPeriod, needToOpen=False, windowsMinStep=windowsMinStep)  
 
                 elif temperatureTrend == "RISING":
                     continue #good job kairos!! 
@@ -428,60 +354,12 @@ class GreenhouseWindowsPositionManager(hass.Hass):
                 continue        
 
             openCloseTime = None
-            if self.isWindowTopType(window):
+            if self.isWindowTopType(entityDocument):
                 openCloseTime = windowTopOpenCloseTime
             else:
                 openCloseTime = windowLowOpenCloseTime
 
-            self.windowsTakeAWhile(window.entityToUpdate, window.topic, window.currentPosition, toPosition, openCloseTime)
-
-
-    def buildWindows(self, windowsConf):
-
-        windows     = []
-        entityKeys  = []
-        self._getEntitiesInGroup(windowsConf, entityKeys)
-
-        for key in entityKeys:
-            #1 check if the current windows is enabled
-            keyComposed = key+WINDOW_ACTIVE_KEY
-            keyComposed = keyComposed.replace("input_text", "input_boolean")
-            state = self.get_state(keyComposed)
-            if "on" == state or True == state:
-                try:
-                    #2 getting all window date by his own keys
-                    #2.1 getting name
-                    keyComposed = key+WINDOW_NAME_KEY
-                    name = self.get_state(keyComposed)
-                    #2.2 getting id
-                    id = key
-                    #2.3 getting topic
-                    keyComposed = key+WINDOW_TOPIC_KEY
-                    topic = self.get_state(keyComposed)
-                    #2.4 getting current position
-                    keyComposed = key+WINDOW_POSITION_KEY
-                    entityToUpdate = keyComposed.replace("input_text", "input_number")
-                    position = self.get_state(entityToUpdate)
-                    #2.5 getting orientation
-                    keyComposed = key+WINDOW_ORIENTATION_KEY
-                    keyComposed = keyComposed.replace("input_text", "input_select")
-                    orientation = self.get_state(keyComposed)
-                    #2.6 getting window type
-                    keyComposed = key+WINDOW_TYPE_KEY
-                    keyComposed = keyComposed.replace("input_text", "input_select")
-                    type = self.get_state(keyComposed)
-
-                    windowEntity = WindowEntity(True, id, name, topic, position, entityToUpdate, type, orientation)
-                    self.log("window entity: %s", windowEntity, level="DEBUG")
-                    windows.append(windowEntity)
-                except Exception as e:
-                    self.log("Error occourred: %s", e)
-                    continue
-            else: 
-                self.log("window id: %s skipped. It is disabled! value: %s ", keyComposed, state)
-
-
-        return windows
+            self.windowsTakeAWhile(entityDocument['entity'], entityDocument['topicCommand'], entityDocument['state'], toPosition, openCloseTime)
 
 
     def buildPeriods(self, periods, groupPeriodActive, groupPeriod, groupPeriodTemperature, groupPeriodWindowTopMaxOpen, groupPeriodWindowLowMaxOpen, groupPeriodWindWindowTopMaxOpen, groupPeriodWindWindowLowMaxOpen):
@@ -589,14 +467,14 @@ class GreenhouseWindowsPositionManager(hass.Hass):
             periods[len(periods)-1].setEndPeriod(firstStartPeriod)
 
 
-    def _checkIsOnUpwindDownwind(self, windowEntity : WindowEntity, windSensor, windDirection, structureUpwind, structureDownwind):
+    def _checkIsOnUpwindDownwind(self, entityDocument, windSensor, windDirection, structureUpwind, structureDownwind):
 
         if windSensor == WEATHER_WIND_NONE:
             return None
 
-        windowOrientation   = windowEntity.windowOrientation
+        windowOrientation   = entityDocument[WINDOW_ORIENTATION_KEY]
 
-        if self.isWindowTopType(windowEntity):
+        if self.isWindowTopType(entityDocument):
             if windDirection == self._calcBackwardOrientation(structureDownwind):
                 #downwind
                 return WEATHER_WIND_DOWNWIND_KEY
@@ -607,7 +485,6 @@ class GreenhouseWindowsPositionManager(hass.Hass):
                 return WEATHER_WIND_DOWNWIND_KEY
 
         return None
-
 
     def _extractWindSettingsFromParameters(self, groupEntity, windWindowMaxOpen):
 
@@ -667,12 +544,11 @@ class GreenhouseWindowsPositionManager(hass.Hass):
         
         return entityStateArray
 
-
     def windowsTakeAWhile(self, entity, topic, windowCurrentPosition: int, windowTargetPosition: int, openCloseTime: int) :
         command = None
         
-        windowCurrentPosition = int(float(windowCurrentPosition))
-        windowTargetPosition = int(float(windowTargetPosition))
+        windowCurrentPosition = int(windowCurrentPosition)
+        windowTargetPosition = int(windowTargetPosition)
 
         #checking if the target position is equals the current position
         if windowCurrentPosition == windowTargetPosition:
@@ -739,10 +615,10 @@ class GreenhouseWindowsPositionManager(hass.Hass):
         return document
 
 
-    def  calculateWindowFuturePosition(self, windowEntity : WindowEntity, currentPeriod: PeriodConfiguration, needToOpen, windowsMinStep ):
-        self.log("Calculating current position for window: %s", windowEntity.name)
+    def  calculateWindowFuturePosition(self, windowEntity, currentPeriod: PeriodConfiguration, needToOpen, windowsMinStep ):
+        self.log("Calculating current position for window: %s", windowEntity['name'])
 
-        windowCurrentPosition : int = int(float(windowEntity.currentPosition))
+        windowCurrentPosition : int = int(windowEntity['state'])
         windowTopMinStep : int      = int(self._getWindowTopOpenCloseTime(windowsMinStep))
         windowLowMinStep : int      = int(self._getWindowLowOpenCloseTime(windowsMinStep))
         toPosition                  = None
@@ -776,15 +652,15 @@ class GreenhouseWindowsPositionManager(hass.Hass):
             toPosition = 100
 
         if toPosition == windowCurrentPosition:
-            self.log("window %s is on max period position: [%d], nothing to do..", windowEntity.name, toPosition)
+            self.log("window %s is on max period position: [%d], nothing to do..", windowEntity['name'], toPosition)
         else:    
             self.log("windowd current position %d, future position calculated: %d", windowCurrentPosition, toPosition)
         
         return toPosition
 
 
-    def isWindowTopType(self, windowEntity: WindowEntity):
-        windowType = windowEntity.windowType
+    def isWindowTopType(self, windowEntity):
+        windowType = windowEntity['type']
         if windowType == WINDOW_TOP_TYPE_KEY:
             return True
         else:

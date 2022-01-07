@@ -275,6 +275,160 @@ views:
                 entities:
                   - entity: input_number.s7_window_top_max_open_period_4_upwind_strong
                     name: Colmi
+  - title: Finestre S7
+    path: finestre-s7
+    badges: []
+    cards:
+      - type: entities
+        entities:
+          - entity: input_boolean.s7_window1_active
+          - entity: input_text.s7_window1_name
+          - entity: input_text.s7_window1_topic
+            icon: mdi:bullhorn
+          - entity: input_select.s7_window1_orientation
+            icon: mdi:compass-outline
+            name: Orientamento finestra
+          - entity: input_select.s7_window1_type
+            icon: mdi:call-merge
+            name: Tipologia finestra
+          - entity: input_number.s7_window1_position
+            name: Posizione
+        title: Finestra 1
+      - type: entities
+        entities:
+          - entity: input_boolean.s7_window2_active
+          - entity: input_text.s7_window2_name
+          - entity: input_text.s7_window2_topic
+            icon: mdi:bullhorn
+          - entity: input_select.s7_window2_orientation
+            icon: mdi:compass-outline
+            name: Orientamento finestra
+          - entity: input_select.s7_window2_type
+            icon: mdi:call-merge
+            name: Tipologia finestra
+          - entity: input_number.s7_window2_position
+            name: Posizione
+        title: Finestra 2
+      - type: entities
+        entities:
+          - entity: input_boolean.s7_window3_active
+          - entity: input_text.s7_window3_name
+          - entity: input_text.s7_window3_topic
+            icon: mdi:bullhorn
+          - entity: input_select.s7_window3_orientation
+            icon: mdi:compass-outline
+            name: Orientamento finestra
+          - entity: input_select.s7_window3_type
+            icon: mdi:call-merge
+            name: Tipologia finestra
+          - entity: input_number.s7_window3_position
+            name: Posizione
+        title: Finestra 3
+      - type: entities
+        entities:
+          - entity: input_boolean.s7_window4_active
+          - entity: input_text.s7_window4_name
+          - entity: input_text.s7_window4_topic
+            icon: mdi:bullhorn
+          - entity: input_select.s7_window4_orientation
+            icon: mdi:compass-outline
+            name: Orientamento finestra
+          - entity: input_select.s7_window4_type
+            icon: mdi:call-merge
+            name: Tipologia finestra
+          - entity: input_number.s7_window4_position
+            name: Posizione
+        title: Finestra 4
+      - type: entities
+        entities:
+          - entity: input_boolean.s7_window5_active
+          - entity: input_text.s7_window5_name
+          - entity: input_text.s7_window5_topic
+            icon: mdi:bullhorn
+          - entity: input_select.s7_window5_orientation
+            icon: mdi:compass-outline
+            name: Orientamento finestra
+          - entity: input_select.s7_window5_type
+            icon: mdi:call-merge
+            name: Tipologia finestra
+          - entity: input_number.s7_window5_position
+            name: Posizione
+        title: Finestra 5
+      - type: entities
+        entities:
+          - entity: input_boolean.s7_window6_active
+          - entity: input_text.s7_window6_name
+          - entity: input_text.s7_window6_topic
+            icon: mdi:bullhorn
+          - entity: input_select.s7_window6_orientation
+            icon: mdi:compass-outline
+            name: Orientamento finestra
+          - entity: input_select.s7_window6_type
+            icon: mdi:call-merge
+            name: Tipologia finestra
+          - entity: input_number.s7_window6_position
+            name: Posizione
+        title: Finestra 6
+      - type: entities
+        entities:
+          - entity: input_boolean.s7_window7_active
+          - entity: input_text.s7_window7_name
+          - entity: input_text.s7_window7_topic
+            icon: mdi:bullhorn
+          - entity: input_select.s7_window7_orientation
+            icon: mdi:compass-outline
+            name: Orientamento finestra
+          - entity: input_select.s7_window7_type
+            icon: mdi:call-merge
+            name: Tipologia finestra
+          - entity: input_number.s7_window7_position
+            name: Posizione
+        title: Finestra 7
+      - type: entities
+        entities:
+          - entity: input_boolean.s7_window8_active
+          - entity: input_text.s7_window8_name
+          - entity: input_text.s7_window8_topic
+            icon: mdi:bullhorn
+          - entity: input_select.s7_window8_orientation
+            icon: mdi:compass-outline
+            name: Orientamento finestra
+          - entity: input_select.s7_window8_type
+            icon: mdi:call-merge
+            name: Tipologia finestra
+          - entity: input_number.s7_window8_position
+            name: Posizione
+        title: Finestra 8
+      - type: entities
+        entities:
+          - entity: input_boolean.s7_window9_active
+          - entity: input_text.s7_window9_name
+          - entity: input_text.s7_window9_topic
+            icon: mdi:bullhorn
+          - entity: input_select.s7_window9_orientation
+            icon: mdi:compass-outline
+            name: Orientamento finestra
+          - entity: input_select.s7_window9_type
+            icon: mdi:call-merge
+            name: Tipologia finestra
+          - entity: input_number.s7_window9_position
+            name: Posizione
+        title: Finestra 9
+      - type: entities
+        entities:
+          - entity: input_boolean.s7_window10_active
+          - entity: input_text.s7_window10_name
+          - entity: input_text.s7_window10_topic
+            icon: mdi:bullhorn
+          - entity: input_select.s7_window10_orientation
+            icon: mdi:compass-outline
+            name: Orientamento finestra
+          - entity: input_select.s7_window10_type
+            icon: mdi:call-merge
+            name: Tipologia finestra
+          - entity: input_number.s7_window10_position
+            name: Posizione
+        title: Finestra 10
   - title: Impostazioni
     path: impostazioni
     badges: []
