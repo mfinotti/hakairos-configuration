@@ -375,6 +375,10 @@ class GreenhouseWindowsPositionManager(hass.Hass):
         #checking the target temperature
         targetTemperature = float(currentPeriod.targetTemperature)
         
+        if "unknown" == currentTemperature:
+            self.log("UNKNOWN value for current temperature. Skipping windows position managing..", level="WARNING")
+            return
+            
         temperatureComparison = "ABOVE" if float(currentTemperature) > targetTemperature else "BELOW"
         self.log("current temperature: %s it's %s the target temperature %s", currentTemperature, temperatureComparison, targetTemperature)
         self.log("temperature trend is: %s", temperatureTrend)
