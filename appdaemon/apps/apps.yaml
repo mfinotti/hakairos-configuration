@@ -7,36 +7,47 @@ greenhouse_windows_position_manager:
 asyncMQTTHelper:
   module: asyncMQTTHelper
   class: AsyncMQTTHelper
-# weatherStationHelper:
-#   module: weatherStationHelper
-#   class: WeatherStationHelper
-#   priodity: 10
-#   urlObserver: "http://192.168.1.254/livedata.htm"
-#   sensors:
-#     temperature:
-#       wsentity: outTemp
-#       topic: ws/temperature
-#     humidity:
-#       wsentity: outHumi
-#       topic: ws/humidity
-#     battery:
-#       wsentity: outBattSta1
-#       topic: ws/battery
-#     uv:
-#       wsentity: uvi
-#       topic: ws/uv
-#     windDirection:
-#       wsentity: windir
-#       topic: ws/wind/direction
-#     windSpeed:
-#       wsentity: avgwind
-#       topic: ws/wind/speed
-#     windGust: #folata
-#       wsentity: gustspeed
-#       topic: ws/wind/gust
-#     rain:
-#       wsentity: rainofdaily
-#       topic: ws/rain
-#     solarRadiation:
-#       wsentity: solarrad
-#       topic: ws/solar-radiation
+kairosgreenNodeMQTTHelper:
+  module: kairosgreenNodeMQTTHelper
+  class: KairosgreenNodeMQTTHelper
+  node:
+    kt_node_000001:
+      env_temperature: "sensor.s8_temperature_sensor"
+      env_humidity: "sensor.s8_humidity_sensor"
+      env_hic: "sensor.s8_hic_sensor"
+      soil_temperature: "sensor.s8_soiltemperature_sensor"
+      soil_humidity: "sensor.s8_soilmoisture_sensor"
+      soil_ec: "sensor.s8_soilec_sensor"
+weatherStationHelper:
+  module: weatherStationHelper
+  class: WeatherStationHelper
+  priodity: 10
+  urlObserver: "http://192.168.1.254/livedata.htm"
+  sensors:
+    temperature:
+      wsentity: outTemp
+      topic: ws/temperature
+    humidity:
+      wsentity: outHumi
+      topic: ws/humidity
+    battery:
+      wsentity: outBattSta1
+      topic: ws/battery
+    uv:
+      wsentity: uvi
+      topic: ws/uv
+    windDirection:
+      wsentity: windir
+      topic: ws/wind/direction
+    windSpeed:
+      wsentity: avgwind
+      topic: ws/wind/speed
+    windGust: #folata
+      wsentity: gustspeed
+      topic: ws/wind/gust
+    rain:
+      wsentity: rainofdaily
+      topic: ws/rain
+    solarRadiation:
+      wsentity: solarrad
+      topic: ws/solar-radiation

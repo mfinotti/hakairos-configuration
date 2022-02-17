@@ -131,13 +131,13 @@ views:
             cards:
               - type: entities
                 entities:
-                  - entity: sensor.frontend_s7_window_top1
+                  - entity: sensor.s7_window_top1
                     name: Colmi
-                  - entity: sensor.frontend_s7_window_right_side1
+                  - entity: sensor.s7_window_right_side1
                     name: Laterali
-                  - entity: sensor.frontend_s7_window_front_sea_side_lx1
+                  - entity: sensor.s7_window_front_sea_side_lx1
                     name: Lato mare
-                  - entity: sensor.frontend_s7_window_front_mountain_side_lx1
+                  - entity: sensor.s7_window_front_mountain_side_lx1
                     name: Lato monte
                 title: Finestre serra 7
                 state_color: false
@@ -153,29 +153,12 @@ views:
                     name: Lato monte
                 title: Finestre serra 8
                 state_color: false
-          - type: horizontal-stack
-            cards:
-              - type: button
-                entity: automation.chiudi_tutte_le_finestre
-                icon: hass:window-closed
-                show_state: false
-                tap_action:
-                  action: call-service
-                  service: script.close_all_windows_call
-              - type: button
-                entity: automation.riposiziona_tutte_le_finestre
-                icon: hass:window-closed
-                show_state: false
-                tap_action:
-                  action: call-service
-                  service: script.reset_all_windows
-                  service_data:
-                    entity_id: automation.riposiziona_tutte_le_finestre
       - type: vertical-stack
         cards:
           - type: entities
             entities: []
             title: Stato impianti
+            state_color: true
           - type: horizontal-stack
             cards:
               - type: button
@@ -198,6 +181,9 @@ views:
                 icon_height: 50px
           - type: entities
             entities:
+              - entity: binary_sensor.kt_gateway_000001
+                name: Portante Radio
+                secondary_info: last-changed
               - entity: sensor.ws_battery
                 secondary_info: last-updated
                 name: Batteria stazione meteo
@@ -402,12 +388,20 @@ views:
             title: Serra 8
           - type: vertical-stack
             cards:
-              - type: button
-                tap_action:
-                  action: more-info
-                entity: binary_sensor.s8_state
-                show_state: true
-                icon_height: 50px
+              - type: horizontal-stack
+                cards:
+                  - type: button
+                    tap_action:
+                      action: more-info
+                    entity: binary_sensor.s8_state
+                    show_state: true
+                    icon_height: 50px
+                  - type: button
+                    tap_action:
+                      action: more-info
+                    entity: binary_sensor.stazioni_rilevamento_s8
+                    show_state: true
+                    icon_height: 50px
               - type: entities
                 entities:
                   - entity: binary_sensor.s8_blackout
@@ -420,6 +414,14 @@ views:
                     name: Anomalia colmi
                     secondary_info: last-updated
                 title: Anomalie
+              - type: entities
+                entities:
+                  - entity: binary_sensor.kt_node_000001
+                    icon: mdi:check-network-outline
+                    name: Stazione 1
+                    secondary_info: last-updated
+                title: 'Stazioni rilevamento '
+                state_color: true
       - type: vertical-stack
         cards:
           - type: vertical-stack
@@ -448,32 +450,61 @@ views:
                       yellow: 73
                       red: 85
                   - type: gauge
-                    entity: sensor.s8_soilmoisture_sensor
+                    entity: sensor.s8_hic
                     min: 0
                     max: 100
-              - type: entities
-                entities:
-                  - entity: sensor.w_wind_intensity_frontend
-                    icon: hass:windsock
-                    name: Velocità vento
-                  - entity: sensor.w_wind_direction_frontend
-                    name: Direzione vento
-                    icon: hass:apple-safari
-                  - entity: sensor.w_wind_gust_frontend
-                    name: Velocità raffica
-                    icon: hass:weather-windy
-                header:
-                  type: buttons
-                  entities: []
-      - type: entities
-        entities:
-          - entity: sensor.frontend_s8_window_front_mountain_side1
-          - entity: sensor.frontend_s8_window_front_sea_side1
-          - entity: sensor.frontend_s8_window_left_side1
-          - entity: sensor.frontend_s8_window_right_side1
-          - entity: sensor.frontend_s8_window_top1
-          - entity: sensor.frontend_s8_window_top2
-        title: Posizione finestre
+              - type: horizontal-stack
+                cards:
+                  - type: gauge
+                    entity: sensor.s8_soil_temperature
+                    min: 0
+                    max: 50
+                    severity:
+                      green: 22
+                      yellow: 24
+                      red: 27
+                  - type: gauge
+                    entity: sensor.s8_soil_moisture
+                    min: 0
+                    max: 100
+                    severity:
+                      green: 72
+                      yellow: 73
+                      red: 85
+                  - type: gauge
+                    entity: sensor.s8_soil_ec
+                    min: 0
+                    max: 20
+                    severity:
+                      green: 0
+                      yellow: 3
+                      red: 8
+      - type: vertical-stack
+        cards:
+          - type: entities
+            entities:
+              - entity: sensor.w_wind_intensity_frontend
+                icon: hass:windsock
+                name: Velocità vento
+              - entity: sensor.w_wind_direction_frontend
+                name: Direzione vento
+                icon: hass:apple-safari
+              - entity: sensor.w_wind_gust_frontend
+                name: Velocità raffica
+                icon: hass:weather-windy
+            header:
+              type: buttons
+              entities: []
+            title: Vento
+          - type: entities
+            entities:
+              - entity: sensor.frontend_s8_window_front_mountain_side1
+              - entity: sensor.frontend_s8_window_front_sea_side1
+              - entity: sensor.frontend_s8_window_left_side1
+              - entity: sensor.frontend_s8_window_right_side1
+              - entity: sensor.frontend_s8_window_top1
+              - entity: sensor.frontend_s8_window_top2
+            title: Posizione finestre
   - title: admin
     path: admin
     visible:
