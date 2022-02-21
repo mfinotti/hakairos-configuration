@@ -128,54 +128,31 @@ targets:
             data:
               - event: line_1_on
               - event: line_2_on
-  - target: sensor.s7_temperature_state
+  - target: sensor.w_rain_state
     events:
-      - event: TEMP_EXTREMELY_LOW
+      - event: WE_RAINING
         level: ALERT
-        message: Serra 7 - Temperatura estremamente bassa! Finestre in chiusura totale.
-      - event: TEMP_EXTREMELY_HIGH
-        level: ALERT
-        message: Serra 7 - Temperatura estremamente alta! Finestre in apertura totale.
-  - target: sensor.s8_temperature_state
-    events:
-      - event: TEMP_EXTREMELY_LOW
-        level: ALERT
-        message: Serra 8 - Temperatura estremamente bassa! Finestre in chiusura totale.
-      - event: TEMP_EXTREMELY_HIGH
-        level: ALERT
-        message: Serra 8 - Temperatura estremamente alta! Finestre in apertura totale.
-
-
-
-
-  - target: binary_sensor.line_1_state
-    events:
-      - event: NOTICE_LINE_1_ON
-        level: NOTICE
-        message: Irrigazione linea 1 ON
+        message: Attenzione, Rilevata pioggia. Chiusura dei colmi delle serre in corso.
         callback:
           - event: HAKAFKA_PRODUCER_PRODUCE
             topic: "HASSIO"
-      - event: NOTICE_LINE_1_OFF
-        level: NOTICE
-        message: Irrigazione linea 1 OFF
-        callback:
-          - event: HAKAFKA_PRODUCER_PRODUCE
-            topic: "HASSIO"
-  - target: binary_sensor.line_2_state
+  - target: binary_sensor.s7_windows_top_open
     events:
-      - event: NOTICE_LINE_2_ON
-        level: NOTICE
-        message: Irrigazione linea 2 ON
+      - event: "off"
+        level: ALERT
+        message: Attenzione, Colmi Serra 7 chiusi completamente
         callback:
           - event: HAKAFKA_PRODUCER_PRODUCE
             topic: "HASSIO"
-      - event: NOTICE_LINE_2_OFF
-        level: NOTICE
-        message: Irrigazione linea 2 OFF
+  - target: binary_sensor.s8_windows_top_open
+    events:
+      - event: "off"
+        level: ALERT
+        message: Attenzione, Colmi Serra 8 chiusi completamente
         callback:
           - event: HAKAFKA_PRODUCER_PRODUCE
             topic: "HASSIO"
+  
       
   - target: scripts.ececution
     events: 
