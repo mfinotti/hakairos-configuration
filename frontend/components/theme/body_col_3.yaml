@@ -1,0 +1,68 @@
+type: vertical-stack
+cards:
+  - type: 'custom:button-card'
+    name: VALORI
+    template: label_center
+    styles:
+      name: 
+        - font-size: 15px
+        - font-weight: bold
+  - type: horizontal-stack
+    cards:
+      - type: sensor
+        entity: sensor.temperatura
+        graph: line
+        detail: 1
+        icon: mdi:thermometer
+        name: Interna
+      - type: sensor
+        entity: sensor.umidita
+        graph: line
+        detail: 1
+        icon: mdi:water-percent
+        name: Umidità
+  - type: horizontal-stack
+    cards:
+      - type: sensor
+        entity: sensor.em_consumo
+        graph: line
+        detail: 1
+        icon: mdi:lightning-bolt
+        name: Consumo
+      - type: 'custom:button-card'
+        template: row_space_10
+      
+      # - entity: switch.sw_thermostat
+      #   label: |
+      #     [[[
+      #       var h = states['switch.sw_thermostat'].state;
+      #       return 'Oggi: '+h;
+      #     ]]]
+      #   layout: icon_name_state2nd
+      #   name: Caldaia
+      #   icon: mdi:radiator
+      #   show_icon: true
+      #   show_name: true
+      #   show_state: true
+      #   show_label: true
+      #   styles:
+      #     card:
+      #       - height: 100%
+      #     state:
+      #       - font-size: 160%
+      #     name:
+      #       - font-size: 16px
+      #       - font-weight: 500
+      #       - color: var(--secondary-text-color)
+      #     label:
+      #       - margin-top: 18px
+      #       - color: var(--secondary-text-color)
+      #       - font-size: 80%
+      #   state:
+      #     - value: Accesa
+      #       styles:
+      #         state:
+      #           - color: var(--paper-item-icon-active-color)
+      #         icon:
+      #           - color: var(--paper-item-icon-active-color)
+      #   type: 'custom:button-card'

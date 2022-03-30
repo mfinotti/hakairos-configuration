@@ -1,0 +1,73 @@
+type: horizontal-stack
+cards:
+  - type: horizontal-stack
+    cards:
+      - type: 'custom:button-card'
+        entity: person.max
+        name: Max
+        template: sensor_person
+        variables:
+          battery_entity: sensor.battery_cell_max      
+      - type: 'custom:button-card'
+        entity: person.ele
+        name: Elena
+        template: sensor_person
+        variables:
+          battery_entity: sensor.battery_cell_ele        
+  - type: 'custom:button-card'
+    entity: sensor.time
+    layout: vertical
+    template: no_background
+    label: "[[[ return states['sensor.dark_sky_hourly_summary_tmpl'].state; ]]]"
+    name: "[[[ return states['sensor.pretty_date'].state; ]]]"
+    show_icon: false
+    show_label: true
+    show_name: true
+    show_state: true
+    styles:
+      card:
+        - height: 100px
+      state:
+        - font-size: 200%
+        - font-weight: bold
+        - justify-self: center
+      label:
+        - justify-self: center
+        - font-size: 90%
+        - color: var(--paper-item-icon-active-color)
+      name:
+        - justify-self: center
+        - font-size: 120%
+    tap_action:
+      action: none        
+  - type: horizontal-stack
+    cards:
+      - type: glance
+        style: |
+          :host {
+            height: 100px;
+          }
+        entities:
+          - entity: binary_sensor.pve_ubuntu_server_running
+            name: SERVER
+          - entity: binary_sensor.internet_status
+            name: INTERNET
+          - entity: binary_sensor.ups_status
+            name: UPS
+        show_state: false
+      - type: 'custom:button-card'
+        entity: sensor.cpu_temperature
+        show_icon: false
+        show_state: true
+        name: CPU
+        state_display: '[[[ return entity.state + "°" ]]]'
+        styles:
+          card:
+            - width: 100px
+            - height: 100px
+          name:
+            - font-size: 14px
+            - margin-bottom: 15px
+          state:
+            - font-size: 120%
+            - font-weight: bold

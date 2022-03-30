@@ -1,0 +1,16 @@
+appdaemon:
+  time_zone: CET
+  latitude: 51.725
+  longitude: 14.3434
+  elevation: 0
+  #app_dir: /appdaemon
+  logs:
+    main_log:
+      filename: ./logs/appdaemon.log
+  plugins:
+    HASS:
+      type: hass
+      ha_url: http://kairoshub:8123
+      token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI2MjYwNGU4YjRiYjI0YWQwOTNmZmI3NTUwY2QzZTdiZiIsImlhdCI6MTYzODQ5MTkwMCwiZXhwIjoxOTUzODUxOTAwfQ.gagHCbi94kaEEByEEiphJbGtJOFLozZlt701fHN2bp8
+  python_packages:
+    - lxml
