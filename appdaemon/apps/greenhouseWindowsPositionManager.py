@@ -24,6 +24,7 @@ WINDOW_POSITION_KEY                     = "_position"
 WINDOW_TYPE_KEY                         = "_type"
 WINDOW_ORIENTATION_KEY                  = "_orientation"
 
+SYSTEM_WINDOWS_RECALIBRATION_ENTITY     = "input_boolean.system_windows_recalibration_inprogress"
 
 class WindowEntity():
     isActive                            : bool
@@ -207,7 +208,31 @@ class GreenhouseWindowsPositionManager(hass.Hass):
         self.listen_event(self.manageWindows, "HA_MANAGE_WINDOWS3")
 
     def manageWindows(self, event_name, data, kwargs):    
+        
+        event   = data.get('event')
+        
+        isRecalibrationInProgress: bool = False
+        if self.get_state(SYSTEM_WINDOWS_RECALIBRATION_ENTITY) == "on":
+            isRecalibrationInProgress = True
+
+        if isRecalibrationInProgress:
+            if event == "windows_s7_recalibration" or event == "windows_s8_recalibration":
+                self.log("There is already one running process for windows recalibration Event: %s", event, level="WARNING")
+                return
+            
+        self.create_task(asyncio.sleep(1), callback=self.manageWindowsProcess, data=data )
+
+        
+
+    def manageWindowsProcess(self, kwargs):
+        data                            = kwargs['data']
         event                           = data.get('event')
+
+        if self.get_state(SYSTEM_WINDOWS_RECALIBRATION_ENTITY) == "on": 
+            self.log("Windows recalibration in progress.. Event: %s will be delayed for 30 seconds...", event)
+            self.create_task(asyncio.sleep(30), callback=self.manageWindowsProcess, data=data )
+            return 
+
         groupPeriodActive               = data.get('periodActive')
         groupPeriod                     = data.get('period', None)
         groupPeriodTemperature          = data.get('periodTemperature', None)
@@ -228,7 +253,7 @@ class GreenhouseWindowsPositionManager(hass.Hass):
         structure_orientation           = data.get('structure_orientation', None)
 
         self.log("event data collected: %s", data)
-        
+
         #reset periods
         periods = []
         windows = []
@@ -260,6 +285,7 @@ class GreenhouseWindowsPositionManager(hass.Hass):
 
         if len(windows) == 0:
             self.log("None windows found for this event. skipping..", level="WARNING")
+            return
 
         if event == "windows_check":
             self.manageWindowsByTemperature(currentPeriod, 
@@ -287,6 +313,10 @@ class GreenhouseWindowsPositionManager(hass.Hass):
                 windDirectionSensor,
                 structure_orientation)
 
+        if event == "windows_s7_recalibration" or event == "windows_s8_recalibration":
+            self.manageWindowsRecalibrationEvent(currentPeriod,
+                windows,
+                openCloseTime)
 
     def manageWindowsByWind(self,
         currentPeriod : PeriodConfiguration, 
@@ -340,6 +370,37 @@ class GreenhouseWindowsPositionManager(hass.Hass):
                 else:
                     self.windowsTakeAWhile(entity.entityToUpdate, entity.topic, entity.currentPosition, int(float(toPosition)), self._getWindowLowOpenCloseTime(openCloseTime))
 
+    def manageWindowsRecalibrationEvent(self,
+        currentPeriod : PeriodConfiguration, 
+        windowsEntity, 
+        openCloseTime
+    ):
+        self.set_state(SYSTEM_WINDOWS_RECALIBRATION_ENTITY, state="on")
+        self.log("WINDOWS RECALIBRATION PROCESS STARTED")
+        self.manageWindowsByRain(currentPeriod=currentPeriod, windowsEntity=windowsEntity, openCloseTime=openCloseTime)
+        
+        self.create_task(asyncio.sleep(30), callback=self.callbackWindowsCalibrationEvent, windowsEntity=windowsEntity )
+        
+
+    def callbackWindowsCalibrationEvent(self, kwargs):
+        windowsEntity = kwargs['windowsEntity']
+        self.log("WINDOWS CALIBRATION IN PROGRESS. Checking if the windows is on reset position (0)")
+        isAllWindowsClosed : bool = False
+        for entity in windowsEntity:
+            entity : WindowEntity
+            if int(float(self.get_state(entity.entityToUpdate))) > 0:
+                break
+            isAllWindowsClosed = True
+            if isAllWindowsClosed:
+                self.set_state(SYSTEM_WINDOWS_RECALIBRATION_ENTITY, state="off")
+                break
+       
+        if not isAllWindowsClosed:
+            self.create_task(asyncio.sleep(30), callback=self.callbackWindowsCalibrationEvent, windowsEntity=windowsEntity )
+            return
+
+        self.log("All windows is on reset position. Windows recalibration process ended.")
+        self.log("WINDOWS CALIBRATION COMPLETE")
 
     def manageWindowsByRain(self,
         currentPeriod : PeriodConfiguration, 

@@ -98,7 +98,7 @@ views:
                     action: none
                   show_state: true
                   show_name: false
-                  icon: hass:sunny
+                  icon: mdi:weather-sunny
               - type: gauge
                 entity: sensor.ws_uv_sensor
                 min: 0
@@ -131,13 +131,13 @@ views:
             cards:
               - type: entities
                 entities:
-                  - entity: sensor.s7_window_top1
+                  - entity: sensor.frontend_s7_window_top1
                     name: Colmi
-                  - entity: sensor.s7_window_right_side1
+                  - entity: sensor.frontend_s7_window_right_side1
                     name: Laterali
-                  - entity: sensor.s7_window_front_sea_side_lx1
+                  - entity: sensor.frontend_s7_window_front_sea_side_lx1
                     name: Lato mare
-                  - entity: sensor.s7_window_front_mountain_side_lx1
+                  - entity: sensor.frontend_s7_window_front_mountain_side_lx1
                     name: Lato monte
                 title: Finestre serra 7
                 state_color: false
@@ -147,7 +147,7 @@ views:
                     name: Colmi
                   - entity: sensor.frontend_s8_window_right_side1
                     name: Laterali
-                  - entity: sensor.frontend_s8_window_front_mountain_side1
+                  - entity: sensor.frontend_s8_window_front_sea_side1
                     name: Lato mare
                   - entity: sensor.frontend_s8_window_front_mountain_side1
                     name: Lato monte
@@ -183,75 +183,103 @@ views:
             entities:
               - entity: binary_sensor.kt_gateway_000001
                 name: Portante Radio
-                secondary_info: last-changed
+                secondary_info: last-updated
+                icon: mdi:check-network-outline
               - entity: sensor.ws_battery
                 secondary_info: last-updated
                 name: Batteria stazione meteo
             state_color: true
-  - title: Dati giornalieri
+  - title: Dati storici
     path: today
-    panel: true
+    type: panel
     badges: []
     cards:
       - type: vertical-stack
         cards:
+          - type: markdown
+            content: >-
+              In questa pagina sono esposti tutti i dati storici degli ultimi
+              sette giorni che i sensori hanno rilevato. 
+
+
+              Sono preseni il numero di allarmi rilevati, valori medi per gli
+              indicatori e grafici storici dei principali indicatori
+              rispettivamente ai valori rilevati. 
+            title: Dati storici
           - type: horizontal-stack
             cards:
-              - type: vertical-stack
-                cards:
-                  - type: sensor
-                    entity: sensor.ws_temperature
-                    detail: 2
-                    name: Temperatura
-                    graph: line
-                  - type: history-graph
-                    entities:
-                      - entity: sensor.ws_temperature
-                      - entity: sensor.s7_temperature
-                      - entity: sensor.s8_temperature
-                    hours_to_show: 24
-                    refresh_interval: 0
-                    title: Temperature
-                  - type: history-graph
-                    entities:
-                      - entity: sensor.weather_index
-                    hours_to_show: 24
-                    refresh_interval: 0
-                    title: Meteo
-                  - type: history-graph
-                    entities:
-                      - entity: sensor.w_wind_intensity_frontend
-                    hours_to_show: 24
-                    refresh_interval: 0
-                    title: Presenza vento
-              - type: vertical-stack
-                cards:
-                  - type: sensor
-                    entity: sensor.ws_humidity
-                    graph: line
-                    icon: hass:water
-                    name: Umidità
-                    detail: 2
-                  - type: history-graph
-                    entities:
-                      - entity: sensor.ws_humidity
-                      - entity: sensor.s7_humidity
-                      - entity: sensor.s8_humidity
-                    hours_to_show: 24
-                    refresh_interval: 0
-                    title: Umidità
-                  - type: history-graph
-                    entities:
-                      - entity: sensor.ws_uv_sensor
-                    hours_to_show: 24
-                    refresh_interval: 0
-                    title: Intensità sole
-                  - type: history-graph
-                    entities:
-                      - entity: sensor.w_wind_direction_frontend
-                    hours_to_show: 24
-                    refresh_interval: 0
-                    title: Provenienza vento
+              - type: button
+                tap_action:
+                  action: none
+                entity: ''
+                name: Pioggia caduta
+                hold_action:
+                  action: none
+                icon_height: 50px
+              - type: button
+                tap_action:
+                  action: none
+                entity: ''
+                name: Picco UV
+                icon_height: 50px
+              - type: button
+                tap_action:
+                  action: none
+                entity: ''
+                name: S8 EC Medio
+                icon_height: 50px
+              - type: button
+                tap_action:
+                  action: none
+                entity: ''
+                name: Allarmi rilevati
+                icon_height: 50px
+              - type: button
+                tap_action:
+                  action: none
+                entity: ''
+                name: Prevalenza vento
+                icon_height: 50px
+              - type: button
+                tap_action:
+                  action: none
+                entity: ''
+                name: Picco Folata
+                icon_height: 50px
+          - type: history-graph
+            entities:
+              - entity: sensor.ws_temperature
+              - entity: sensor.s7_temperature
+              - entity: sensor.s8_temperature
+            hours_to_show: 168
+            refresh_interval: 0
+            title: Temperature
+          - type: history-graph
+            entities:
+              - entity: sensor.ws_humidity
+              - entity: sensor.s7_humidity
+              - entity: sensor.s8_humidity
+            hours_to_show: 168
+            refresh_interval: 0
+            title: Umidità
+          - type: history-graph
+            entities:
+              - entity: sensor.s8_soil_temperature
+            hours_to_show: 168
+            refresh_interval: 0
+            title: Temperatura del terreno
+          - type: history-graph
+            entities:
+              - entity: sensor.s8_soil_moisture
+            hours_to_show: 168
+            refresh_interval: 0
+            title: Umidità del terreno
+          - type: history-graph
+            entities:
+              - entity: sensor.s8_soil_ec
+            hours_to_show: 168
+            refresh_interval: 0
+            title: EC del terreno
   - title: Anomalie
     path: anomalie
     panel: true
@@ -430,6 +458,10 @@ views:
                 content: >-
                   Valori relativi a temperatura, umidità relativa dell'ambiente,
                   valori del terreno e posizione delle finestre.
+
+
+                  *Cliccando nel rispettivo indicatore si possono vedere i
+                  valori relativi all'intera giornata.*
                 title: Valori
               - type: horizontal-stack
                 cards:
@@ -472,13 +504,14 @@ views:
                       yellow: 73
                       red: 85
                   - type: gauge
-                    entity: sensor.s8_soil_ec
+                    entity: sensor.s8_soilec_sensor
                     min: 0
                     max: 20
                     severity:
                       green: 0
                       yellow: 3
                       red: 8
+                    name: EC Terreno mS/cm
       - type: vertical-stack
         cards:
           - type: entities

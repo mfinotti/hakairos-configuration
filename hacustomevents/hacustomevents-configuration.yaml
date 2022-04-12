@@ -152,6 +152,42 @@ targets:
         callback:
           - event: HAKAFKA_PRODUCER_PRODUCE
             topic: "HASSIO"
+  - target: binary_sensor.kt_gateway_000001
+    events:
+      - event: "offline"
+        level: TECHNICAL
+        message: Attenzione, Ponte radio Serra 7 (kt_gateway_000001) OFFLINE
+        callback:
+          - event: HAKAFKA_PRODUCER_PRODUCE
+            topic: "HASSIO"
+  - target: binary_sensor.kt_node_000001
+    events:
+      - event: "offline"
+        level: TECHNICAL
+        message: Attenzione, Stazione rilevamento Serra 8 (kt_node_000001) OFFLINE
+        callback:
+          - event: HAKAFKA_PRODUCER_PRODUCE
+            topic: "HASSIO"
+  - target: input_boolean.system_windows_recalibration_inprogress
+    events:
+      - event: "deadlock"
+        level: TECHNICAL
+        message: Rilevato problema DEADLOCK su ricalibrazione finestre
+        callback:
+          - event: HAKAFKA_PRODUCER_PRODUCE
+            topic: "HASSIO"
+      - event: "on"
+        level: ALERT
+        message: Inizio procedura di ricalibrazione delle finestre 
+        callback:
+          - event: HAKAFKA_PRODUCER_PRODUCE
+            topic: "HASSIO"
+      - event: "off"
+        level: ALERT
+        message: Procedura di ricalibrazione delle finestre completata con successo
+        callback:
+          - event: HAKAFKA_PRODUCER_PRODUCE
+            topic: "HASSIO"
   
       
   - target: scripts.ececution
