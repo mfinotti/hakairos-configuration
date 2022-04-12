@@ -153,6 +153,31 @@ views:
                     name: Lato monte
                 title: Finestre serra 8
                 state_color: false
+      type: horizontal-stack
+      cards:
+        - type: button
+          entity: automation.calibra_finestre_serra_7
+          icon: mdi:cog-refresh
+          tap_action:
+            action: call-service
+          service: automation.trigger
+          service_data: {}
+          target:
+            entity_id: automation.calibra_finestre_serra_7
+          hold_action:
+            action: none
+        - type: button
+          tap_action:
+            action: call-service
+            service: automation.trigger
+            service_data:
+              skip_condition: false
+          target:
+            entity_id: automation.calibra_finestre_serra_8
+          entity: automation.calibra_finestre_serra_8
+          icon: mdi:cog-refresh
+          show_icon: true
+          show_name: true
       - type: vertical-stack
         cards:
           - type: entities
