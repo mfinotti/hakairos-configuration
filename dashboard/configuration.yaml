@@ -153,31 +153,55 @@ views:
                     name: Lato monte
                 title: Finestre serra 8
                 state_color: false
-      type: horizontal-stack
-      cards:
-        - type: button
-          entity: automation.calibra_finestre_serra_7
-          icon: mdi:cog-refresh
-          tap_action:
-            action: call-service
-          service: automation.trigger
-          service_data: {}
-          target:
-            entity_id: automation.calibra_finestre_serra_7
-          hold_action:
-            action: none
-        - type: button
-          tap_action:
-            action: call-service
-            service: automation.trigger
-            service_data:
-              skip_condition: false
-          target:
-            entity_id: automation.calibra_finestre_serra_8
-          entity: automation.calibra_finestre_serra_8
-          icon: mdi:cog-refresh
-          show_icon: true
-          show_name: true
+          - type: horizontal-stack
+            cards:
+              - type: conditional
+                conditions:
+                  - entity: input_boolean.system_windows_recalibration_inprogress
+                    state: 'on'
+                card:
+                  type: markdown
+                  content: >-
+                    E' in corso un evento di ricalibrazione delle finestre. Le
+                    funzioni di ricalibrazioni delle finstre saranno di nuovo
+                    disponibili al termine del processo. 
+
+
+                    *Attendere..*
+                  title: Ricalibrazione in corso
+              - type: conditional
+                conditions:
+                  - entity: input_boolean.system_windows_recalibration_inprogress
+                    state: 'off'
+                card:
+                  type: button
+                  entity: automation.calibra_finestre_serra_7
+                  icon: mdi:cog-refresh
+                  tap_action:
+                    action: call-service
+                    service: automation.trigger
+                    service_data: {}
+                    target:
+                      entity_id: automation.calibra_finestre_serra_7
+                  hold_action:
+                    action: none
+              - type: conditional
+                conditions:
+                  - entity: input_boolean.system_windows_recalibration_inprogress
+                    state: 'off'
+                card:
+                  type: button
+                  tap_action:
+                    action: call-service
+                    service: automation.trigger
+                    service_data:
+                      skip_condition: false
+                    target:
+                      entity_id: automation.calibra_finestre_serra_8
+                  entity: automation.calibra_finestre_serra_8
+                  icon: mdi:cog-refresh
+                  show_icon: true
+                  show_name: true
       - type: vertical-stack
         cards:
           - type: entities

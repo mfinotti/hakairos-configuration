@@ -377,7 +377,10 @@ class GreenhouseWindowsPositionManager(hass.Hass):
     ):
         self.set_state(SYSTEM_WINDOWS_RECALIBRATION_ENTITY, state="on")
         self.log("WINDOWS RECALIBRATION PROCESS STARTED")
-        self.manageWindowsByRain(currentPeriod=currentPeriod, windowsEntity=windowsEntity, openCloseTime=openCloseTime)
+        for entity in windowsEntity:
+            entity : WindowEntity
+            toPosition = WINDOW_CLOSED_POSITION
+            self.windowsTakeAWhile(entity.entityToUpdate, entity.topic, entity.currentPosition, toPosition, self._getWindowTopOpenCloseTime(openCloseTime))
         
         self.create_task(asyncio.sleep(30), callback=self.callbackWindowsCalibrationEvent, windowsEntity=windowsEntity )
         
