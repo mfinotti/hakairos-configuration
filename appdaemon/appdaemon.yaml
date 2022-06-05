@@ -10,7 +10,7 @@ appdaemon:
   plugins:
     HASS:
       type: hass
-      ha_url: http://kairoshub:8123
-      token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI2MjYwNGU4YjRiYjI0YWQwOTNmZmI3NTUwY2QzZTdiZiIsImlhdCI6MTYzODQ5MTkwMCwiZXhwIjoxOTUzODUxOTAwfQ.gagHCbi94kaEEByEEiphJbGtJOFLozZlt701fHN2bp8
+      ha_url: http://kairoshome_202203:8123
+      token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI4M2QzYWE4YTIzMTE0Yjk1YmVlMzBmNTllMWUzMTE3OSIsImlhdCI6MTY1MDY1MTUwOSwiZXhwIjoxOTY2MDExNTA5fQ.jPfkM1Ihu_tTZeXhSSoHmmSqS_Rz3pR5dVmXlH_yEIE
   python_packages:
     - lxml

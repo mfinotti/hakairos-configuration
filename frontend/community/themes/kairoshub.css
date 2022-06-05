@@ -1,0 +1,5 @@
+.tvblock_temperature {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--active-color);
+}

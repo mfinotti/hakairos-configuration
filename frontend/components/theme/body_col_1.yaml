@@ -1,12 +1,12 @@
 type: vertical-stack
 cards:
-  - type: 'custom:button-card'
-    name: CLIMA
-    template: label_center
-    styles:
-      name: 
-        - font-size: 15px
-        - font-weight: bold
+  # - type: 'custom:button-card'
+  #   name: CLIMA
+  #   template: label_center
+  #   styles:
+  #     name: 
+  #       - font-size: 15px
+  #       - font-weight: bold
   # - type: horizontal-stack
   #   cards:
   #     - name: In Casa
@@ -30,16 +30,10 @@ cards:
   #         service_data:
   #           entity_id: input_boolean.night
   #       type: 'custom:button-card'
-  - type: horizontal-stack
-    cards:
-      - type: 'custom:simple-thermostat'
-        entity: climate.riscaldamento
-        label:
-          temperature: Temp
-          state: Stato
-        header: false
-        control: false
-        layout:
-          step: row
-        sensors:
-          - entity: input_boolean.heater_auto
+- type: custom:weather-card
+  entity: weather.casa
+  current: true
+  details: false
+  forecast: true
+  hourly_forecast: false
+  number_of_forecasts: 5

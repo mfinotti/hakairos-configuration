@@ -26,6 +26,8 @@ kairoshome - light:
   primary-background-color: "#F7F9FB"
   secondary-background-color: "#ffffff"
   divider-color: "#e7e7e7"
+  active-color: "#4284F4"
+
   ### Text ###
   primary-text-color: var(--primary-color)
   secondary-text-color: "#757575"
@@ -40,19 +42,19 @@ kairoshome - light:
   sidebar-selected-text-color: var(--sidebar-selected-icon-color)
   ### States and Badges ###
   state-icon-color: "#606367"
-  state-icon-active-color: "#ffb750"
+  state-icon-active-color: var(--active-color)
   state-icon-unavailable-color: var(--disabled-text-color)
   ### Sliders ###
   paper-slider-knob-color: "#4284F4"
   paper-slider-knob-start-color: "#8eb8ff"
   paper-slider-pin-color: "#8eb8ff"
-  paper-slider-active-color: "#8eb8ff"
+  paper-slider-active-color: var(--active-color)
   paper-slider-secondary-color: var(--light-primary-color)
   paper-slider-container-color: "#e7e7e7"
   ### Labels ###
   label-badge-background-color: "#252B36"
   label-badge-text-color: "#F1F1F1"
-  label-badge-red: "#6C7B9B"
+  label-badge-red: var(--error-color)
   ### Cards ###
   paper-card-background-color: "#ffffff"
   paper-listbox-background-color: "#ffffff"
@@ -112,13 +114,13 @@ kairoshome - dark:
   sidebar-selected-text-color: var(--sidebar-selected-icon-color)
   ### States and Badges ### 
   state-icon-color: "#ffffff"
-  state-icon-active-color: "#ffb750"
+  state-icon-active-color: var(--active-color)
   state-icon-unavailable-color: var(--disabled-text-color)
   ### Sliders ###
   paper-slider-knob-color: "#4284F4"
   paper-slider-knob-start-color: "#8eb8ff"
   paper-slider-pin-color: "#8eb8ff"
-  paper-slider-active-color: "#8eb8ff"
+  paper-slider-active-color: var(--active-color)
   paper-slider-secondary-color: var(--light-primary-color)
   paper-slider-container-color: "#a1a1a1"
   ### Labels ###

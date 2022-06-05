@@ -5,12 +5,13 @@ cards:
   - type: horizontal-stack
     cards:
       - type: 'custom:button-card'
-        entity: input_boolean.heater_auto
+        entity: binary_sensor.heater_auto
         layout: vertical
-        template: header_page_text
+        template: 
+          - header_page_text
+          - icon_clima
         name: 'CLIMA'
         label: 'Clima /'
-        icon: 'mdi:hours-24'
       - type: 'custom:button-card'
         template: row_space_10
       - type: horizontal-stack
@@ -24,81 +25,194 @@ cards:
           - type: 'custom:button-card'
             template: button_go_to_prog4
         template: row_space_10
-  - type: vertical-stack
-    cards:
-      - type: 'custom:button-card'
-        template: row_space_10
-      - type: 'custom:button-card'
-        template: row_space_10
   - type: horizontal-stack
     cards:
-      - type: 'custom:button-card'
-        template: row_space_10
-
       - type: vertical-stack
         cards:
-          - type: 'custom:button-card'
-            color_type: label-card
-            color: rgb(44, 109, 214)
-            name: Programmi Clima
-            tap_action:
-              action: none
           - type: horizontal-stack
             cards:
               - type: 'custom:button-card'
-                entity: input_boolean.heater_program1
-                color_type: card
-                color: rgb(66, 134, 244)
-                icon: mdi:numeric-1-box-outline
-                show_state: true
-                styles:
-                  card: 
-                    - height: 55px
-                  state: 
-                    - font-size: 12px
-                show_name: false
+                entity: 'sensor.dayzone_temperature_0' 
+                template: 'clima_sensor_detail'
+                name: Ambiente 
+                variables: 
+                  temperature: sensor.dayzone_temperature_0
+                  identifier: TH01
+                  lastupdate: sensor.dayzone_temperature_0
+                  state: sensor.th01_state
               - type: 'custom:button-card'
-                entity: input_boolean.heater_program2
-                color_type: card
-                color: rgb(66, 134, 244)
-                icon: mdi:numeric-2-box-outline
-                show_name: false
-                show_state: true
-                styles:
-                  card: 
-                    - height: 55px
-                  state: 
-                    - font-size: 12px
+                entity: 'sensor.tv01_lastupdate' 
+                template: 'clima_tv_detail'
+                name: Ambiente 1 
+                variables: 
+                  temperature: sensor.tv01_temp
+                  identifier: TV01
+                  target_temp: sensor.tv01_target_temp
+                  valve_position: sensor.tv01_pos 
+                  valve_battery: sensor.tv01_battery
+                  state: sensor.tv01_state
+                  lastupdate: sensor.tv01_lastupdate
+                  visibility: input_boolean.tv_01
               - type: 'custom:button-card'
-                entity: input_boolean.heater_program3
-                color_type: card
-                color: rgb(66, 134, 244)
-                icon: mdi:numeric-3-box-outline
-                show_name: false
-                show_state: true
-                styles:
-                  card: 
-                    - height: 55px
-                  state: 
-                    - font-size: 12px
+                entity: 'sensor.tv02_lastupdate' 
+                template: 'clima_tv_detail'
+                name: Ambiente 2 
+                variables: 
+                  temperature: sensor.tv02_temp
+                  identifier: TV02
+                  target_temp: sensor.tv02_target_temp
+                  valve_position: sensor.tv02_pos 
+                  valve_battery: sensor.tv02_battery
+                  state: sensor.tv02_state
+                  lastupdate: sensor.tv02_lastupdate
+                  visibility: input_boolean.tv_02
               - type: 'custom:button-card'
-                entity: input_boolean.heater_program4
-                color_type: card
-                color: rgb(66, 134, 244)
-                icon: mdi:numeric-4-box-outline
-                show_name: false
-                show_state: true
-                styles:
-                  card: 
-                    - height: 55px
-                  state: 
-                    - font-size: 12px
-
-      - type: 'custom:button-card'
-        template: row_space_10
-  
+                entity: 'sensor.tv03_lastupdate' 
+                template: 'clima_tv_detail'
+                name: Ambiente 3 
+                variables: 
+                  temperature: sensor.tv03_temp
+                  identifier: TV03
+                  target_temp: sensor.tv03_target_temp
+                  valve_position: sensor.tv03_pos 
+                  valve_battery: sensor.tv03_battery
+                  state: sensor.tv03_state
+                  lastupdate: sensor.tv03_lastupdate
+                  visibility: input_boolean.tv_03
+                 
+     
   - type: horizontal-stack
     cards:
-      - type: 'custom:button-card'
-        template: row_space_10
+        - type: 'custom:button-card'
+          entity: 'sensor.tv04_lastupdate' 
+          template: 'clima_tv_detail'
+          name: Ambiente 4 
+          variables: 
+            temperature: sensor.tv04_temp
+            identifier: TV04
+            target_temp: sensor.tv04_target_temp
+            valve_position: sensor.tv04_pos 
+            valve_battery: sensor.tv04_battery
+            state: sensor.tv04_state
+            lastupdate: sensor.tv04_lastupdate
+            visibility: input_boolean.tv_04
+        - type: 'custom:button-card'
+          entity: 'sensor.tv05_lastupdate' 
+          template: 'clima_tv_detail'
+          name: Ambiente 5 
+          variables: 
+            temperature: sensor.tv05_temp
+            identifier: TV05
+            target_temp: sensor.tv05_target_temp
+            valve_position: sensor.tv05_pos 
+            valve_battery: sensor.tv05_battery
+            state: sensor.tv05_state
+            lastupdate: sensor.tv05_lastupdate
+            visibility: input_boolean.tv_05
+        - type: 'custom:button-card'
+          entity: 'sensor.tv06_lastupdate' 
+          template: 'clima_tv_detail'
+          name: Ambiente 6 
+          variables: 
+            temperature: sensor.tv06_temp
+            identifier: TV06
+            target_temp: sensor.tv06_target_temp
+            valve_position: sensor.tv06_pos 
+            valve_battery: sensor.tv06_battery
+            state: sensor.tv06_state
+            lastupdate: sensor.tv06_lastupdate
+            visibility: input_boolean.tv_06
+        - type: 'custom:button-card'
+          entity: 'sensor.tv07_lastupdate' 
+          template: 'clima_tv_detail'
+          name: Ambiente 7 
+          variables: 
+            temperature: sensor.tv07_temp
+            identifier: TV07
+            target_temp: sensor.tv07_target_temp
+            valve_position: sensor.tv07_pos 
+            valve_battery: sensor.tv07_battery
+            state: sensor.tv07_state
+            lastupdate: sensor.tv07_lastupdate
+            visibility: input_boolean.tv_07                                
+               
+
+
+
+
+
+
+
+    
+  # - type: horizontal-stack
+  #   cards:
+  #     - type: 'custom:button-card'
+  #       template: row_space_10
+
+  #     - type: vertical-stack
+  #       cards:
+  #         - type: 'custom:button-card'
+  #           color_type: label-card
+  #           color: rgb(44, 109, 214)
+  #           name: Programmi Clima
+  #           tap_action:
+  #             action: none
+  #         - type: horizontal-stack
+  #           cards:
+  #             - type: 'custom:button-card'
+  #               entity: input_boolean.heater_program1
+  #               color_type: card
+  #               color: rgb(66, 134, 244)
+  #               icon: mdi:numeric-1-box-outline
+  #               show_state: true
+  #               styles:
+  #                 card: 
+  #                   - height: 55px
+  #                 state: 
+  #                   - font-size: 12px
+  #               show_name: false
+  #             - type: 'custom:button-card'
+  #               entity: input_boolean.heater_program2
+  #               color_type: card
+  #               color: rgb(66, 134, 244)
+  #               icon: mdi:numeric-2-box-outline
+  #               show_name: false
+  #               show_state: true
+  #               styles:
+  #                 card: 
+  #                   - height: 55px
+  #                 state: 
+  #                   - font-size: 12px
+  #             - type: 'custom:button-card'
+  #               entity: input_boolean.heater_program3
+  #               color_type: card
+  #               color: rgb(66, 134, 244)
+  #               icon: mdi:numeric-3-box-outline
+  #               show_name: false
+  #               show_state: true
+  #               styles:
+  #                 card: 
+  #                   - height: 55px
+  #                 state: 
+  #                   - font-size: 12px
+  #             - type: 'custom:button-card'
+  #               entity: input_boolean.heater_program4
+  #               color_type: card
+  #               color: rgb(66, 134, 244)
+  #               icon: mdi:numeric-4-box-outline
+  #               show_name: false
+  #               show_state: true
+  #               styles:
+  #                 card: 
+  #                   - height: 55px
+  #                 state: 
+  #                   - font-size: 12px
+
+  #     - type: 'custom:button-card'
+  #       template: row_space_10
+  
+  # - type: horizontal-stack
+  #   cards:
+  #     - type: 'custom:button-card'
+  #       template: row_space_10
           

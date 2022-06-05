@@ -5,14 +5,14 @@ cards:
   - type: horizontal-stack
     cards:
       - type: 'custom:button-card'
-        entity: input_boolean.heater_auto
-        template: header_page_text
-        name: Programma 1
+        entity: input_boolean.heater_program1
+        layout: vertical
+        template: 
+          - header_page_text
+          - icon_clima
+        name: 'Programma 1'
         label: 'Clima / Programma 1'
-        icon: 'mdi:hours-24'
-        styles:
-          card:
-            - padding-top: 0px
+
       - type: horizontal-stack
         cards:
           - type: 'custom:button-card'
@@ -130,5 +130,13 @@ cards:
           thermostat_period_on: input_datetime.thermostat_sunday_on_period1
           thermostat_period_off: input_datetime.thermostat_sunday_off_period1
       - type: 'custom:button-card'
-        template: row_space_10
+        template: icon_state_header
+        entity: input_boolean.heater_program1
+        icon: mdi:power 
+        show_state: true
+        styles:
+          card: 
+            - padding-top: 20px      
+        label: Prog 1
+        color: auto
   

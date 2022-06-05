@@ -1,18 +1,5 @@
 type: horizontal-stack
 cards:
-  # - type: horizontal-stack
-  #   cards:
-  #     - type: weather-forecast
-  #       entity: weather.casa
-  #       name: Casa
-  #       show_forecast: false
-  #       style: |
-  #         .state, .temp-attribute .temp {
-  #             font-size: 22px !important;
-  #         }
-  #         .temp-attribute .temp span {
-  #             font-size: 22px !important;
-  #         }              
   - type: 'custom:button-card'
     entity: sensor.datetime
     layout: vertical
@@ -25,7 +12,8 @@ cards:
     show_state: true
     styles:
       card:
-        - height: 60px
+        - height: 50px
+        - margin-top: 5px
       state:
         - font-size: 200%
         - font-weight: bold
@@ -42,113 +30,80 @@ cards:
       action: none
   - type: horizontal-stack
     cards:
-      - name: In Casa
-        template: on_off_buttoncard
-        entity: input_boolean.at_home
-        icon: 'mdi:home'
-        color: auto
-        tap_action:
-          action: call-service
-          service: input_boolean.toggle
-          service_data:
-            entity_id: input_boolean.at_home
-        styles:
-          card:
-            - height: 45px
-          name: 
-            - font-size: 15px
-        type: 'custom:button-card'
-      - name: Buonanotte
-        template: on_off_buttoncard
-        entity: input_boolean.night
-        icon: 'mdi:weather-night'
-        tap_action:
-          action: call-service
-          service: input_boolean.toggle
-          service_data:
-            entity_id: input_boolean.night
-        styles:
-          card:
-            - height: 45px
-          name: 
-            - font-size: 15px
-        type: 'custom:button-card'
-  - type: horizontal-stack
-    cards:
-      - name: Programma caldo
-        template: on_off_buttoncard
-        entity: input_boolean.heater_auto
-        icon: 'mdi:hours-24'
-        tap_action:
-          action: call-service
-          service: input_boolean.toggle
-          service_data:
-            entity_id: input_boolean.heater_auto
-        styles:
-          card:
-            - height: 45px
-          name: 
-            - font-size: 15px
-        type: 'custom:button-card'
-      - name: Caldaia
-        template: on_off_buttoncard
-        entity: switch.sw_thermostat
-        icon: 'mdi:radiator'
-        tap_action:
-          action: call-service
-          service: switch.toggle
-          service_data:
-            entity_id: switch.sw_thermostat
-        styles:
-          card:
-            - height: 45px
-          name: 
-            - font-size: 15px
-        type: 'custom:button-card'         
-  # - type: horizontal-stack
-  #   cards:
-  #     - type: glance
-  #       style: |
-  #         :host {
-  #           height: 100px;
-  #         }
-  #       entities:
-  #         - name: In Casa
-  #           template: on_off_buttoncard
-  #           entity: input_boolean.at_home
-  #           icon: 'mdi:home'
-  #           color: auto
-  #           tap_action:
-  #             action: call-service
-  #             service: input_boolean.toggle
-  #             service_data:
-  #               entity_id: input_boolean.at_home
-  #           type: 'custom:button-card'
-  #         - name: Buonanotte
-  #           template: on_off_buttoncard
-  #           entity: input_boolean.night
-  #           icon: 'mdi:weather-night'
-  #           tap_action:
-  #             action: call-service
-  #             service: input_boolean.toggle
-  #             service_data:
-  #               entity_id: input_boolean.night
-  #           type: 'custom:button-card'
-  #         - entity: input_boolean.heater_auto
-  #           name: PROGRAMMA CALDO
-  #           icon: mdi:hours-24
-  #           tap_action:
-  #             action: call-service
-  #             service: input_boolean.toggle
-  #             service_data:
-  #               entity_id: input_boolean.heater_auto
-  #         - entity: switch.sw_thermostat
-  #           name: CALDAIA
-  #           icon: mdi:radiator
-  #           tap_action:
-  #             action: call-service
-  #             service: switch.toggle
-  #             service_data:
-  #               entity_id: switch.sw_thermostat
-  #       show_state: false
-      
+      - type: horizontal-stack
+        cards:
+          # - type: 'custom:button-card'
+          #   template: icon_state_header
+          #   entity: input_boolean.at_home
+          #   icon: 'mdi:home'
+          #   color: auto
+          #   tap_action:
+          #     action: call-service
+          #     service: input_boolean.toggle
+          #     service_data:
+          #       entity_id: input_boolean.at_home
+          #   state:
+          #     - value: 'on'
+          #       label: In Casa
+          #     - value: 'off'
+          #       label: Fuori Casa
+          - name: Notte
+            template: icon_state_header
+            entity: input_boolean.night
+            label: 'Notte'
+            color: var(--active-color)
+            state:
+              - value: 'on'
+                icon: 'mdi:weather-night'
+                label: 'Notte'
+              - value: 'off'
+                icon: 'mdi:weather-sunny'
+                label: 'Giorno'
+            tap_action:
+              action: call-service
+              service: input_boolean.toggle
+              service_data:
+                entity_id: input_boolean.night
+            type: 'custom:button-card'
+          - name: Caldaia
+            type: 'custom:button-card'
+            template: icon_state_header
+            entity: switch.sw_thermostat
+            icon: 'mdi:radiator'
+            color: auto
+            tap_action:
+              action: call-service
+              service: switch.toggle
+              service_data:
+                entity_id: switch.sw_thermostat
+            state:
+              - value: 'on'
+                icon: mdi:radiator
+                label: 'ON'
+              - value: 'off'
+                icon: mdi:radiator-off
+                label: 'OFF'
+          - type: 'custom:button-card'
+            template: header_icon_clima
+          - name: Tapparelle aperte
+            type: 'custom:button-card'
+            template: icon_state_header
+            label: 'Aperte'
+            entity: group.rolershutters
+            icon: 'mdi:window-shutter-open'
+            color: auto
+            tap_action:
+              action: call-service
+              service: cover.toggle
+              service_data:
+                entity_id: group.rolershutters
+            state:
+              - value: 'closed'
+                icon: mdi:window-shutter
+                label: Chiuse
+          - type: 'custom:button-card'
+            template: user_notification_header
+          - type: 'custom:button-card'
+            template: user_profile_header
+            label: Online
+  
