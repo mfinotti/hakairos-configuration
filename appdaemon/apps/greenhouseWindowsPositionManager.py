@@ -204,6 +204,7 @@ class PeriodConfiguration():
 
 class GreenhouseWindowsPositionManager(hass.Hass):
 
+
     def initialize(self):
         self.listen_event(self.manageWindows, "HA_MANAGE_WINDOWS3")
 
@@ -221,8 +222,6 @@ class GreenhouseWindowsPositionManager(hass.Hass):
                 return
             
         self.create_task(asyncio.sleep(1), callback=self.manageWindowsProcess, data=data )
-
-        
 
     def manageWindowsProcess(self, kwargs):
         data                            = kwargs['data']
@@ -299,10 +298,12 @@ class GreenhouseWindowsPositionManager(hass.Hass):
                 windDirectionSensor,
                 structure_orientation)
         
-        if event == "raining":
+        if event == "raining" or event == "stop_raining":
+            isRaining = True if event == "raining" else False  
             self.manageWindowsByRain(currentPeriod,
                 windows,
-                openCloseTime)
+                openCloseTime,
+                isStartingRain = isRaining)
 
         if event == "wind":
             self.manageWindowsByWind(currentPeriod,
@@ -384,7 +385,6 @@ class GreenhouseWindowsPositionManager(hass.Hass):
         
         self.create_task(asyncio.sleep(30), callback=self.callbackWindowsCalibrationEvent, windowsEntity=windowsEntity )
         
-
     def callbackWindowsCalibrationEvent(self, kwargs):
         windowsEntity = kwargs['windowsEntity']
         self.log("WINDOWS CALIBRATION IN PROGRESS. Checking if the windows is on reset position (0)")
@@ -408,15 +408,24 @@ class GreenhouseWindowsPositionManager(hass.Hass):
     def manageWindowsByRain(self,
         currentPeriod : PeriodConfiguration, 
         windowsEntity, 
-        openCloseTime
+        openCloseTime,
+        isStartingRain: bool = True
     ):
         for entity in windowsEntity:
             entity : WindowEntity
             #close all windows top
             if self.isWindowTopType(entity):
-                toPosition = WINDOW_CLOSED_POSITION
+                if isStartingRain:
+                    toPosition = WINDOW_CLOSED_POSITION
+                else:
+                    entityLastState = self.get_state(entity.entityToUpdate+"_last")
+                    if entityLastState:
+                        self.log("Restoring value for entity: %s with last state: %s", entity.entityToUpdate, entityLastState)
+                        toPosition=entityLastState
+                    else:
+                        self.log("Impossible to restore last entity value for entity: %s last state not found.: %s", entity.entityToUpdate, level="WARNING")
+
                 self.windowsTakeAWhile(entity.entityToUpdate, entity.topic, entity.currentPosition, toPosition, self._getWindowTopOpenCloseTime(openCloseTime))
-           
 
     def manageWindowsByTemperature(self, 
         currentPeriod : PeriodConfiguration, 
@@ -736,7 +745,7 @@ class GreenhouseWindowsPositionManager(hass.Hass):
         return entityStateArray
 
 
-    def windowsTakeAWhile(self, entity, topic, windowCurrentPosition: int, windowTargetPosition: int, openCloseTime: int) :
+    def windowsTakeAWhile(self, entity, topic, windowCurrentPosition: int, windowTargetPosition: int, openCloseTime: int, storeState: bool = True) :
         command = None
         
         windowCurrentPosition = int(float(windowCurrentPosition))
@@ -767,6 +776,10 @@ class GreenhouseWindowsPositionManager(hass.Hass):
 
         #windows first command
         self.fire_event("APPDAEMON_MQTT_PUBLISH", topic=topic, command=command)
+
+        if storeState: 
+            self.set_state(entity+"_last", state=windowCurrentPosition)
+
         #windows second command (stop)
         self.create_task(asyncio.sleep(tDelta), callback=self.callbackStopEvent, topic=topic, command="stop", entity=entity, newPosition=windowTargetPosition, oldPosition=windowCurrentPosition, startTime=datetime.datetime.now().time(), tDelta=tDelta )
 
