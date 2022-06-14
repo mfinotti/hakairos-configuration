@@ -7,6 +7,7 @@ events:
     type: listener
     callback:
       - event: HAKAFKA_CONSUMER_START
+        topic: "input_text.system_code"
       - event: HAKAFKA_PRODUCER_START
   - event: HA_SHUTDOWN_REQUEST
     platform: HASSIO_EVENT

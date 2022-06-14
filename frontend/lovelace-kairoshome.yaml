@@ -23,12 +23,12 @@ views:
       - type: vertical-stack
         cards:
           - !include hakairos-configuration/frontend/components/theme/header.yaml        
+          - type: 'custom:button-card'
+            template: row_space_10
           - type: horizontal-stack
             cards:
               - !include hakairos-configuration/frontend/components/theme/body_col_1.yaml
-              #- !include hakairos-configuration/frontend/components/theme/body_col_2.yaml
               - !include hakairos-configuration/frontend/components/theme/body_col_3.yaml        
-          # - !include demo/home/footer.yaml
   - title: CLIMA
     path: clima
     panel: true
@@ -36,6 +36,14 @@ views:
       - type: vertical-stack
         cards:
           - !include hakairos-configuration/frontend/panels/clima.yaml
+  - title: ASSISTENZA
+    icon: 
+    path: assistenza
+    panel: true
+    cards:
+      - type: vertical-stack
+        cards:
+          - !include hakairos-configuration/frontend/panels/assistance.yaml
   - title: Programma 1
     path: clima-p1
     panel: true

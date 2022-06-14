@@ -2,7 +2,7 @@
 ##### HA-KAFKA Configuration
 #####
 ssl_context:
-  ssl_certpath: "/data/certs"
+  ssl_certpath: "/opt/ha-cert"
   ssl_cafile: "ca-cert"
   ssl_certfile: "cert-signed"
   ssl_keyfile: "private-key"

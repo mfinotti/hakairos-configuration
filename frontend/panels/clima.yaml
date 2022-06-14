@@ -27,6 +27,10 @@ cards:
         template: row_space_10
   - type: horizontal-stack
     cards:
+      - type: 'custom:button-card'
+        template: row_space_10
+  - type: horizontal-stack
+    cards:
       - type: vertical-stack
         cards:
           - type: horizontal-stack
