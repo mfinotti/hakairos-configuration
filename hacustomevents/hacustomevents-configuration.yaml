@@ -51,14 +51,14 @@ events:
         data:
           - event: automationEventOnCommand
           - event: automationEventOffCommand
-  - event: automationEventOnCommand
+  - event: systemAssistanceOnCommand
     platform: HASSIO_EVENT
     type: dispatcher
-    label: "An event to be dispatched"
-  - event: automationEventOffCommand
+    label: "System Assistance on command"
+  - event: systemAssistanceOffCommand
     platform: HASSIO_EVENT
     type: dispatcher
-    label: "An event to be dispatched"
+    label: "System Assistance off command"
 targets:
   - target: scripts.ececution
     events: 
