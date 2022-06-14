@@ -28,6 +28,7 @@ cards:
           - type: 'custom:button-card'
             icon: 'mdi:information-outline'
             name: Dati Impianto
+            entity: 'sensor.system_state' 
             styles:
               card: 
                 - color: var(--primary-text-color)
